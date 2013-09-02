@@ -1,0 +1,79 @@
+#logo-area {
+  margin-bottom: 30px;
+
+  #logo {
+    margin-top: 5px;
+    float: left;
+
+    a {
+      padding: 2px;
+      border: 3px solid $wfe-topbar-border-color;
+
+      &:hover {
+        background-color: darken(white, 3%);
+        color: $wfe-topbar-bg-color;
+        border: 3px solid $wfe-topbar-font-color;
+      }
+    }
+  }
+
+  #logo-time {
+    font-size: 12px;
+    text-align: right;
+    line-height: 1.4;
+  }
+}
+
+#topbar-user {
+  margin-bottom: 30px;
+
+  #topbar-avatar {
+    float: left;
+
+    img {
+      border: 3px solid $wfe-topbar-border-color;
+
+      &:hover {
+        border: 3px solid $wfe-topbar-font-color;
+      }
+    }
+  }
+
+  #topbar-sign-out {
+    padding-top: 10px;
+    text-align: right;
+    line-height: 1.4;
+
+    a {
+      font-size: 12px;
+    }
+  }
+}
+
+.wfe-clear {
+  clear: both;
+}
+
+#topbar {
+  a {
+    font-size: 23px;
+    color: $wfe-topbar-border-color;
+
+    &:hover {
+      color: white;
+    }
+
+    &.button {
+      font-size: 14px;
+      color: white;
+    }
+  }
+
+  .sign-up-or-sign-in {
+    text-align: center;
+
+    a {
+      font-size: 14px;
+    } 
+  }
+}

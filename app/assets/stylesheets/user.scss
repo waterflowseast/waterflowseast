@@ -1,0 +1,70 @@
+.user {
+  margin-bottom: 15px;
+
+  .main {
+    border-bottom: 1px solid #eee;
+  }
+
+  table {
+    width: 100%;
+    background: $wfe-body-bg-color;
+    margin-bottom: emCalc(8px);
+    border: none;
+
+    tr {
+      th, td {
+        color: $wfe-sidebar-font-color;
+        font-size: 12px;
+        padding: emCalc(4px) emCalc(9px) emCalc(4px) 0;
+
+        &.align-right {
+          text-align: right;
+        }
+
+        a {
+          padding: emCalc(2px) emCalc(9px);
+          border-radius: $global-rounded;
+
+          &:hover {
+            background-color: $wfe-primary-color;
+            color: white;
+          }
+        }
+      }
+
+      &.even, &.alt, &:nth-of-type(even) { 
+        background: $wfe-body-bg-color;
+      }
+    }
+  }
+}
+
+#main > .user {
+  .avatar {
+    padding: 5px;
+  }
+
+  .main {
+    text-align: right;
+    margin-left: 150px;
+    border-bottom: none;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #777;
+
+    h2 {
+      color: #777;
+      font-size: 27px;
+      margin: 0;
+    }
+
+    div.words {
+      font-family: "Helvetica Neue", "Helvetica", Helvetica, STKaiti, KaiTi, sans-serif;
+      font-size: 16px;
+    }
+
+    div.action span {
+      padding-right: 0;
+    }
+  }
+}

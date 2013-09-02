@@ -1,0 +1,34 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.sign-button {
+  margin-top: 10px;
+  margin-bottom: 1px;
+}
+
+form.custom .custom.checkbox.checked:before {
+    content: "\2713";
+    color: #222;
+    position: absolute;
+    top: -35%;
+    left: 50%;
+    margin-top: 4px;
+    margin-left: -5px;
+}
+
+.forget-password {
+  text-align: right;
+  font-size: 14px;
+}
+
+textarea {
+  height: auto;
+}
+
+.alert-box {
+  padding: 5px 30px;
+  line-height: 18px;
+  text-align: center;
+}

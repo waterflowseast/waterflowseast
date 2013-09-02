@@ -1,25 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>We're sorry, but something went wrong (500)</title>
+  <meta charset="utf-8" />
+  <title>Ruby平台的Web开发</title>
   <style type="text/css">
-    body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
-    div.dialog {
-      width: 25em;
-      padding: 0 4em;
-      margin: 4em auto 0 auto;
-      border: 1px solid #ccc;
-      border-right-color: #999;
-      border-bottom-color: #999;
+    html, body, #topbar, #main {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
     }
-    h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
+
+    #topbar {
+      width: 16.67%;
+      float: left;
+      background-color: #285a2e;
+      text-align: center;
+    }
+
+    #logo {
+      margin-top: 45px;
+    }
+
+    a {
+      font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+      font-size: 128px;
+      text-decoration: none;
+      color: #e6e6e6;
+      padding: 5px;
+      border: 12px solid #e6e6e6;
+    }
+
+    a:hover {
+      background-color: #f7f7f7;
+      color: #285a2e;
+      border: 12px solid #bbb;
+    }
+
+    #main {
+      background-color: #eff8f0;
+    }
+
+    #content {
+      margin-top: -120px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #285a2e;
+      font-size: 200px;
+      letter-spacing: 20px;
+      margin-bottom: 0;
+    }
+
+    p {
+      font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+      color: #777;
+      font-size: 27px;
+      font-weight: bold;
+    }
   </style>
 </head>
 
 <body>
-  <!-- This file lives in public/500.html -->
-  <div class="dialog">
-    <h1>We're sorry, but something went wrong.</h1>
+  <div id="topbar">
+    <div id="logo">
+      <a href="http://waterflowseast.com">流</a>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="content">
+      <h1>500</h1>
+      <p>服务器发生错误，可能需要一段时间才能恢复正常，非常抱歉</p>
+    </div>
   </div>
 </body>
 </html>

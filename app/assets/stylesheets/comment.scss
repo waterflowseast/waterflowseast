@@ -1,0 +1,34 @@
+.comment {
+  margin-bottom: 15px;
+
+  .main {
+    border-bottom: 1px solid #eee;
+  }  
+
+  .no-border-bottom {
+    border-bottom: none;
+
+    .action {
+      margin-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .action {
+    margin-top: -10px;
+    padding-bottom: 10px;
+  }
+}
+
+.wfe-image-floor {
+  margin-top: -2px;
+  margin-right: -3px;
+}
+
+.nested-comments {
+  margin-left: 48px;
+}
+
+.nested-comments .nested-comments .nested-comments .nested-comments {
+  margin-left: 0;
+}

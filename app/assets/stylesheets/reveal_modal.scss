@@ -1,0 +1,22 @@
+.reveal-modal {
+  margin-left: auto;
+  margin-right: auto;
+  left: auto;
+  right: auto;
+
+  h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+  }
+
+  table {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (min-width: 1020px) {
+  .reveal-modal {
+    position: fixed;
+    width: 50%;
+  }
+}
