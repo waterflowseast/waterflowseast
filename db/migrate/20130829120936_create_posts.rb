@@ -7,7 +7,7 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :user_id
       t.integer :node_id
       t.string :permalink
-      t.boolean :can_be_deleted, default: false, null: false
+      t.boolean :can_be_deleted, default: true, null: false
       t.integer :views_count, default: 0, null: false
       t.integer :direct_comments_count, default: 0, null: false
       t.integer :total_comments_count, default: 0, null: false

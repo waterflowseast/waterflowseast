@@ -9,7 +9,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :words
       t.boolean :admin, default: false, null: false
       t.string :permalink
-      t.boolean :can_be_deleted, default: false, null: false
+      t.boolean :can_be_deleted, default: true, null: false
       t.string :reset_token
       t.datetime :reset_deadline
       t.string :confirm_token

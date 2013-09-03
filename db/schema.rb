@@ -31,12 +31,12 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "user_id"
     t.string   "floor"
     t.string   "permalink"
-    t.boolean  "can_be_deleted",       :default => false, :null => false
-    t.integer  "total_comments_count", :default => 0,     :null => false
-    t.integer  "voting_ups_count",     :default => 0,     :null => false
-    t.integer  "voting_downs_count",   :default => 0,     :null => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.boolean  "can_be_deleted",       :default => true, :null => false
+    t.integer  "total_comments_count", :default => 0,    :null => false
+    t.integer  "voting_ups_count",     :default => 0,    :null => false
+    t.integer  "voting_downs_count",   :default => 0,    :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
   end
 
   add_index "comments", ["created_at", "commentable_id", "commentable_type"], :name => "index_comments_on_created_at_and_commentable"
@@ -105,15 +105,15 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "user_id"
     t.integer  "node_id"
     t.string   "permalink"
-    t.boolean  "can_be_deleted",        :default => false, :null => false
-    t.integer  "views_count",           :default => 0,     :null => false
-    t.integer  "direct_comments_count", :default => 0,     :null => false
-    t.integer  "total_comments_count",  :default => 0,     :null => false
-    t.integer  "collectors_count",      :default => 0,     :null => false
-    t.integer  "voting_ups_count",      :default => 0,     :null => false
-    t.integer  "voting_downs_count",    :default => 0,     :null => false
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
+    t.boolean  "can_be_deleted",        :default => true, :null => false
+    t.integer  "views_count",           :default => 0,    :null => false
+    t.integer  "direct_comments_count", :default => 0,    :null => false
+    t.integer  "total_comments_count",  :default => 0,    :null => false
+    t.integer  "collectors_count",      :default => 0,    :null => false
+    t.integer  "voting_ups_count",      :default => 0,    :null => false
+    t.integer  "voting_downs_count",    :default => 0,    :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
   end
 
   add_index "posts", ["permalink"], :name => "index_posts_on_permalink", :unique => true
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.string   "words"
     t.boolean  "admin",                  :default => false, :null => false
     t.string   "permalink"
-    t.boolean  "can_be_deleted",         :default => false, :null => false
+    t.boolean  "can_be_deleted",         :default => true,  :null => false
     t.string   "reset_token"
     t.datetime "reset_deadline"
     t.string   "confirm_token"

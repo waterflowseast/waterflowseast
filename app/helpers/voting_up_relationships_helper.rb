@@ -1,0 +1,2 @@
+module VotingUpRelationshipsHelper
+end

@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   def full_title(title)
-    base_title = "Ruby平台的Web开发"
+    base_title = I18n.t 'base_title'
     if title.blank?
       base_title
     else
