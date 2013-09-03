@@ -2,7 +2,7 @@ Waterflowseast::Application.routes.draw do
   root to: 'posts#index'
 
   resources :posts, except: [:show, :edit, :update] do
-    memember do
+    member do
       get :show_direct_comments
       get :show_total_comments
       get :show_collectors
