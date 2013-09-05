@@ -9,6 +9,70 @@ zh-CN:
 
 
 
+  # Abilities.
+  #----------------------------------------------------------------------------
+  ability:
+    true: '可以进行此操作'
+
+    post:
+      short_of_points: "积分不足，发布此帖所需积分：%{count}"
+      not_authorized_to_update: '你不是管理员，也不是这个帖子的发布者，不能修改这个帖子'
+      wrong_user: '你不是这个帖子的发布者，不能修改这个帖子'
+      out_of_time: '超出可修改的时间，帖子只能在发布后一天的时间里进行修改'
+      can_not_be_deleted: '系统认为这是个有价值的帖子，不能进行删除'
+      not_authorized_to_delete: '你不是管理员，也不是这个帖子的发布者，不能删除这个帖子'
+
+    comment:
+      short_of_points: "积分不足，发表评论所需积分：%{count}"
+      wrong_user: '这个评论不是你所发表的，你不能修改这个评论'
+      out_of_time: '超出可修改的时间，评论只能在发表后一小时的时间里进行修改'
+      can_not_be_deleted: '系统认为这是个有价值的评论，不能进行删除'
+      not_authorized_to_delete: '你不是管理员，也没有发表这个评论，不能删除这个评论'
+
+    user:
+      not_authorized_to_show: '你不是用户本人，不能查看Ta的隐私'
+      not_authorized_to_update: '你不是用户本人，不能修改Ta的信息'
+      can_not_be_deleted: '系统认为你对本站有所贡献，不能进行删除'
+      can_not_delete_admin: '不能删除管理员帐号'
+      not_authorized_to_delete: '你不是管理员，也不是用户本人，不能删除Ta的帐号'
+
+    following_relationship:
+      short_of_points: "积分不足，关注所需积分：%{count}"
+      can_not_follow_self: '不能关注自己'
+      has_followed: '已经关注过了，不能重复关注'
+      wrong_user: '不能删除别人的关注'
+
+    collecting_relationship:
+      short_of_points: "积分不足，收藏所需积分：%{count}"
+      can_not_collect_your_own: '不能收藏自己的帖子'
+      has_collected: '已经收藏过了，不能重复收藏'
+      wrong_user: '不能删除别人的收藏'
+
+    voting_up_relationship:
+      short_of_points: "积分不足，赞成所需积分：%{count}"
+      can_not_vote_your_own: '不能对自己的帖子或评论表示赞成'
+      has_voted: '已经表达过赞成或反对，不能再次表态'
+
+    voting_down_relationship:
+      short_of_points: "积分不足，反对所需积分：%{count}"
+      can_not_vote_your_own: '不能对自己的帖子或评论表示反对'
+      has_voted: '已经表达过赞成或反对，不能再次表态'
+
+    secret:
+      short_of_points: "积分不足，发送私信所需积分：%{count}"
+      can_not_send_to_self: '不能给自己发送私信'
+      wrong_user: '不能删除别人的私信'
+
+    message:
+      wrong_user: '不能删除别人的系统消息'
+
+    invitation:
+      short_of_points: "积分不足，发送邀请所需积分：%{count}"
+      has_been_invited: '你所邀请的人，已经被别人邀请过了'
+      has_been_signed_up: '你所邀请的人，已经是站内用户了'
+
+
+
   # Controllers.
   #----------------------------------------------------------------------------
 

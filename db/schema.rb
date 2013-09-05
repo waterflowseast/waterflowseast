@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
   end
 
   add_index "invitations", ["created_at", "sender_id"], :name => "index_invitations_on_created_at_and_sender_id"
+  add_index "invitations", ["receiver_email"], :name => "index_invitations_on_receiver_email", :unique => true
 
   create_table "messages", :force => true do |t|
     t.integer  "changed_points"
@@ -95,8 +96,8 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.datetime "updated_at",                     :null => false
   end
 
+  add_index "nodes", ["node_group_id", "position"], :name => "index_nodes_on_node_group_id_and_position"
   add_index "nodes", ["permalink"], :name => "index_nodes_on_permalink", :unique => true
-  add_index "nodes", ["position"], :name => "index_nodes_on_position"
 
   create_table "posts", :force => true do |t|
     t.string   "title"
@@ -165,7 +166,7 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "sent_secrets_count",     :default => 0,     :null => false
     t.integer  "messages_count",         :default => 0,     :null => false
     t.integer  "sent_invitations_count", :default => 0,     :null => false
-    t.integer  "points_count",           :default => 30,    :null => false
+    t.integer  "points_count",           :default => 0,     :null => false
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
   end

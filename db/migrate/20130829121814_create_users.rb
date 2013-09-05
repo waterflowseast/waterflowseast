@@ -28,7 +28,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :sent_secrets_count, default: 0, null: false
       t.integer :messages_count, default: 0, null: false
       t.integer :sent_invitations_count, default: 0, null: false
-      t.integer :points_count, default: 30, null: false
+      t.integer :points_count, default: 0, null: false
 
       t.timestamps
     end

@@ -1,0 +1,62 @@
+# 新帐号奖励
+new_account: 30
+# 每天登录奖励
+normal_day_sign_in: 2
+# 月初登录奖励
+first_month_day_sign_in: 30
+
+# 技术无关节点发帖消耗
+non_technical_post: -2
+# 儿童节点发帖奖励
+children_post: 10
+
+# 回复消耗
+comment: -1
+# 赞同消耗
+vote_up: -2
+# 被赞同奖励
+be_voted_up: 1
+# 反对消耗
+vote_down: -2
+# 收藏消耗
+collect: -4
+# 被收藏奖励
+be_collected: 2
+# 关注消耗
+follow: -8
+# 被关注奖励
+be_followed: 4
+# B未关注A，A给B发私信，A所需的消耗
+send_secret: -8
+# B未关注A，A给B发私信，B所得的补偿
+received_secret: 4
+# B关注A，A给B发私信，A不会消耗积分，B也不会被补偿积分
+
+# 邀请消耗
+invite: -16
+
+# 达到奖励级别1，所需的数量
+level_1_number: 25
+# 达到奖励级别2，所需的数量
+level_2_number: 50
+# 达到奖励级别3，所需的数量
+level_3_number: 100
+
+# 被收藏数达到奖励级别1，所另外奖励的积分数量
+be_collected_level_1_points: 10
+# 被收藏数达到奖励级别2，所另外奖励的积分数量
+be_collected_level_2_points: 20
+# 被收藏数达到奖励级别3，所另外奖励的积分数量
+be_collected_level_3_points: 30
+
+# 被赞同数达到奖励级别1，所另外奖励的积分数量
+be_voted_up_level_1_points: 5
+# 被赞同数达到奖励级别2，所另外奖励的积分数量
+be_voted_up_level_2_points: 10
+# 被赞同数达到奖励级别3，所另外奖励的积分数量
+be_voted_up_level_3_points: 15
+
+# 当被收藏数或被赞同数大于以下值时，系统认定所发表的东西是有价值的，将其设置为不可删除
+can_be_deleted_limit: 25
+# 当用户数达到以下值时，之后的注册都需要邀请码
+sign_in_limit_without_invitation: 5000

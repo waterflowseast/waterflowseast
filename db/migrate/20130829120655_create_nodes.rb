@@ -9,7 +9,7 @@ class CreateNodes < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :nodes, :position
+    add_index :nodes, [:node_group_id, :position]
     add_index :nodes, :permalink, unique: true
   end
 end
