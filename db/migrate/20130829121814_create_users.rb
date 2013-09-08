@@ -9,7 +9,6 @@ class CreateUsers < ActiveRecord::Migration
       t.string :words
       t.boolean :admin, default: false, null: false
       t.string :permalink
-      t.boolean :can_be_deleted, default: true, null: false
       t.string :reset_token
       t.datetime :reset_deadline
       t.string :confirm_token
@@ -22,8 +21,8 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :posts_count, default: 0, null: false
       t.integer :collections_count, default: 0, null: false
       t.integer :comments_count, default: 0, null: false
-      t.integer :voting_ups_count, default: 0, null: false
-      t.integer :voting_downs_count, default: 0, null: false
+      t.integer :up_votes_count, default: 0, null: false
+      t.integer :down_votes_count, default: 0, null: false
       t.integer :received_secrets_count, default: 0, null: false
       t.integer :sent_secrets_count, default: 0, null: false
       t.integer :messages_count, default: 0, null: false

@@ -15,11 +15,11 @@ class PostsController < ApplicationController
     
   end
 
-  def show_voting_ups
+  def show_up_voters
 
   end
 
-  def show_voting_downs
+  def show_down_voters
     
   end
 

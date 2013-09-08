@@ -31,12 +31,11 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "user_id"
     t.string   "floor"
     t.string   "permalink"
-    t.boolean  "can_be_deleted",       :default => true, :null => false
-    t.integer  "total_comments_count", :default => 0,    :null => false
-    t.integer  "voting_ups_count",     :default => 0,    :null => false
-    t.integer  "voting_downs_count",   :default => 0,    :null => false
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.integer  "total_comments_count", :default => 0, :null => false
+    t.integer  "up_voters_count",      :default => 0, :null => false
+    t.integer  "down_voters_count",    :default => 0, :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
 
   add_index "comments", ["created_at", "commentable_id", "commentable_type"], :name => "index_comments_on_created_at_and_commentable"
@@ -107,12 +106,13 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "node_id"
     t.string   "permalink"
     t.boolean  "can_be_deleted",        :default => true, :null => false
+    t.integer  "highest_bonus_points",  :default => 0,    :null => false
     t.integer  "views_count",           :default => 0,    :null => false
     t.integer  "direct_comments_count", :default => 0,    :null => false
     t.integer  "total_comments_count",  :default => 0,    :null => false
     t.integer  "collectors_count",      :default => 0,    :null => false
-    t.integer  "voting_ups_count",      :default => 0,    :null => false
-    t.integer  "voting_downs_count",    :default => 0,    :null => false
+    t.integer  "up_voters_count",       :default => 0,    :null => false
+    t.integer  "down_voters_count",     :default => 0,    :null => false
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
   end
@@ -121,8 +121,8 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
   add_index "posts", ["updated_at", "collectors_count"], :name => "index_posts_on_updated_at_and_collectors_count"
   add_index "posts", ["updated_at", "node_id"], :name => "index_posts_on_updated_at_and_node_id"
   add_index "posts", ["updated_at", "total_comments_count"], :name => "index_posts_on_updated_at_and_total_comments_count"
+  add_index "posts", ["updated_at", "up_voters_count"], :name => "index_posts_on_updated_at_and_up_voters_count"
   add_index "posts", ["updated_at", "user_id"], :name => "index_posts_on_updated_at_and_user_id"
-  add_index "posts", ["updated_at", "voting_ups_count"], :name => "index_posts_on_updated_at_and_voting_ups_count"
   add_index "posts", ["updated_at"], :name => "index_posts_on_updated_at"
 
   create_table "secrets", :force => true do |t|
@@ -147,7 +147,6 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.string   "words"
     t.boolean  "admin",                  :default => false, :null => false
     t.string   "permalink"
-    t.boolean  "can_be_deleted",         :default => true,  :null => false
     t.string   "reset_token"
     t.datetime "reset_deadline"
     t.string   "confirm_token"
@@ -160,8 +159,8 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "posts_count",            :default => 0,     :null => false
     t.integer  "collections_count",      :default => 0,     :null => false
     t.integer  "comments_count",         :default => 0,     :null => false
-    t.integer  "voting_ups_count",       :default => 0,     :null => false
-    t.integer  "voting_downs_count",     :default => 0,     :null => false
+    t.integer  "up_votes_count",         :default => 0,     :null => false
+    t.integer  "down_votes_count",       :default => 0,     :null => false
     t.integer  "received_secrets_count", :default => 0,     :null => false
     t.integer  "sent_secrets_count",     :default => 0,     :null => false
     t.integer  "messages_count",         :default => 0,     :null => false

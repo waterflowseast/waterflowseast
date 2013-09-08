@@ -9,9 +9,16 @@ first_month_day_sign_in: 30
 non_technical_post: -2
 # 儿童节点发帖奖励
 children_post: 10
+# 删除帖子消耗
+delete_post: -8
+
+# 当帖子或回复被删除后，所有的子回复也将被系统一并删除，这些子回复的作者将得到积分补偿
+deleted_comment_compensation: 1
 
 # 回复消耗
 comment: -1
+# 删除回复消耗
+delete_comment: -4
 # 赞同消耗
 vote_up: -2
 # 被赞同奖励
@@ -43,20 +50,23 @@ level_2_number: 50
 level_3_number: 100
 
 # 被收藏数达到奖励级别1，所另外奖励的积分数量
-be_collected_level_1_points: 10
+be_collected_level_1_points: 20
 # 被收藏数达到奖励级别2，所另外奖励的积分数量
-be_collected_level_2_points: 20
+be_collected_level_2_points: 40
 # 被收藏数达到奖励级别3，所另外奖励的积分数量
-be_collected_level_3_points: 30
+be_collected_level_3_points: 60
 
 # 被赞同数达到奖励级别1，所另外奖励的积分数量
-be_voted_up_level_1_points: 5
+be_voted_up_level_1_points: 10
 # 被赞同数达到奖励级别2，所另外奖励的积分数量
-be_voted_up_level_2_points: 10
+be_voted_up_level_2_points: 20
 # 被赞同数达到奖励级别3，所另外奖励的积分数量
-be_voted_up_level_3_points: 15
+be_voted_up_level_3_points: 30
 
-# 当被收藏数或被赞同数大于以下值时，系统认定所发表的东西是有价值的，将其设置为不可删除
-can_be_deleted_limit: 25
+# 当被收藏数大于以下值时，帖子被认为是好帖，系统将其设置为不可删除
+valuable_limit_for_collecting: 15
+# 当被赞同数大于以下值时，帖子被认为是好帖，系统将其设置为不可删除
+valuable_limit_for_voting_up: 30
+
 # 当用户数达到以下值时，之后的注册都需要邀请码
 sign_in_limit_without_invitation: 5000

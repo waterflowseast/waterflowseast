@@ -27,11 +27,11 @@ class UsersController < ApplicationController
     
   end
 
-  def show_voting_ups
+  def show_up_votes
     
   end
 
-  def show_voting_downs
+  def show_down_votes
     
   end
 

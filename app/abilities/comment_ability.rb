@@ -27,12 +27,14 @@ class CommentAbility
   end
 
   def destroy?
-    return AbilityResult.new(false, I18n.t('ability.comment.can_not_be_deleted')) unless comment.can_be_deleted?
+    return AbilityResult.new(true) if current_user.admin?
+    return AbilityResult.new(false, I18n.t('ability.comment.not_authorized_to_delete')) if current_user != comment.user
 
-    if current_user.admin? or current_user == comment.user
-      AbilityResult.new(true)
+    points_cost = POINTS_CONFIG['delete_comment'].abs
+    if current_user.points_count < points_cost
+      AbilityResult.new(false, I18n.t('ability.comment.short_of_points_to_delete', count: points_cost))
     else
-      AbilityResult.new(false, I18n.t('ability.comment.not_authorized_to_delete'))
+      AbilityResult.new(true)
     end
   end
 end

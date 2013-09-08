@@ -6,8 +6,8 @@ Waterflowseast::Application.routes.draw do
       get :show_direct_comments
       get :show_total_comments
       get :show_collectors
-      get :show_voting_ups
-      get :show_voting_downs
+      get :show_up_voters
+      get :show_down_voters
 
       get :change_node
       get :change_title
@@ -29,8 +29,8 @@ Waterflowseast::Application.routes.draw do
       get :show_posts
       get :show_collections
       get :show_comments
-      get :show_voting_ups
-      get :show_voting_downs
+      get :show_up_votes
+      get :show_down_votes
 
       get :show_received_secrets
       get :show_sent_secrets
@@ -60,8 +60,8 @@ Waterflowseast::Application.routes.draw do
   resources :comments, except: [:index, :show, :new] do
     member do
       get :show_total_comments
-      get :show_voting_ups
-      get :show_voting_downs
+      get :show_up_voters
+      get :show_down_voters
     end
   end
 

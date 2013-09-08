@@ -16,7 +16,7 @@ class PostAbility
   end
 
   def update_except_for_content?
-    if current_user.admin? or current_user == post.user
+    if current_user.admin? or (current_user == post.user)
       AbilityResult.new(true)
     else
       AbilityResult.new(false, I18n.t('ability.post.not_authorized_to_update'))
@@ -36,11 +36,14 @@ class PostAbility
 
   def destroy?
     return AbilityResult.new(false, I18n.t('ability.post.can_not_be_deleted')) unless post.can_be_deleted?
+    return AbilityResult.new(true) if current_user.admin?
+    return AbilityResult.new(false, I18n.t('ability.post.not_authorized_to_delete')) if current_user != post.user
 
-    if current_user.admin? or current_user == post.user
-      AbilityResult.new(true)
+    points_cost = POINTS_CONFIG['delete_post'].abs
+    if current_user.points_count < points_cost
+      AbilityResult.new(false, I18n.t('ability.post.short_of_points_to_delete', count: points_cost))
     else
-      AbilityResult.new(false, I18n.t('ability.post.not_authorized_to_delete'))
+      AbilityResult.new(true)
     end
   end
 end

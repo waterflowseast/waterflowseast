@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   def full_title(title)
-    base_title = I18n.t 'base_title'
+    base_title = I18n.t 'helper.application.base_title'
     if title.blank?
       base_title
     else

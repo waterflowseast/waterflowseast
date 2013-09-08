@@ -23,10 +23,10 @@ class UserAbility
   end
 
   def destroy?
-    return AbilityResult.new(false, I18n.t('ability.user.can_not_be_deleted')) unless user.can_be_deleted?
+    return AbilityResult.new(false, I18n.t('ability.user.can_not_be_deleted')) if user.great_posts_count > 0
     return AbilityResult.new(false, I18n.t('ability.user.can_not_delete_admin')) if user.admin?
 
-    if current_user.admin? or current_user == user
+    if current_user.admin? or (current_user == user)
       AbilityResult.new(true)
     else
       AbilityResult.new(false, I18n.t('ability.comment.not_authorized_to_delete'))
