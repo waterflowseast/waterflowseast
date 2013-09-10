@@ -119,6 +119,16 @@ zh-CN:
         warning: "%{nickname} 对你的帖子或回复表示了反对"
         to_followeds: "%{name_a} 对 %{name_b} 的帖子或回复表示了反对"
 
+    secret:
+      receiver_not_exist: '你所想要私信的用户不存在'
+      just_sent: "你给 %{nickname} 的私信已经发送成功"
+      record_not_exist: '无法删除私信，该项记录不存在'
+      sent_secret_destroyed: "成功删除了一封你发送给 %{nickname} 的私信"
+      received_secret_destroyed: "成功删除了一封 %{nickname} 发送给你的私信"
+      message:
+        points_subtraction: "你给 %{nickname} 发送了私信"
+        points_addition: "%{nickname} 给你发送了私信"
+
 
 
   # Helpers.

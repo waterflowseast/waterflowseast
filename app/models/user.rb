@@ -183,11 +183,55 @@ class User < ActiveRecord::Base
     id.in? [secret.sender_id, secret.receiver_id]
   end
 
+  def secret_has_been_sent_to(receiver)
+    if receiver.has_followed? self
+      changed_points_for_sender = 0
+      changed_points_for_receiver = 0
+    else
+      changed_points_for_sender = POINTS_CONFIG['send_secret']
+      changed_points_for_receiver = POINTS_CONFIG['received_secret']
+
+      # the receiver didn't follow you, you send him a secret, your points will be subtracted and his points will be added
+      increment! :points_count, changed_points_for_sender
+      receiver.increment! :points_count, changed_points_for_receiver
+    end
+
+    # system will send message to you and the receiver
+    receive_message changed_points_for_sender, points_count, I18n.t('controller.secret.message.points_subtraction', nickname: receiver.nickname)
+    receiver.receive_message changed_points_for_receiver, receiver.points_count, I18n.t('controller.secret.message.points_addition', nickname: nickname)
+
+    # update corresponding count
+    increment! :sent_secrets_count
+    receiver.increment! :received_secrets_count
+  end
+
+  def destroy_sent_secret(secret)
+    decrement! :sent_secrets_count
+
+    if secret.receiver_deleted?
+      secret.destroy
+    else
+      secret.toggle! :sender_deleted
+    end
+  end
+
+  def destroy_received_secret(secret)
+    decrement! :received_secrets_count
+
+    if secret.sender_deleted?
+      secret.destroy
+    else
+      secret.toggle! :receiver_deleted
+    end
+  end
+
   def receive_message(changed_points, current_points, content)
     message = messages.build
     message.changed_points = changed_points
     message.current_points = current_points
     message.content = content
     message.save
+
+    increment! :messages_count
   end
 end
