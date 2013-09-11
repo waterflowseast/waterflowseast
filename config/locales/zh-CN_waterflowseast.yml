@@ -64,9 +64,6 @@ zh-CN:
       can_not_send_to_self: '不能给自己发送私信'
       wrong_user: '不能删除别人的私信'
 
-    message:
-      wrong_user: '不能删除别人的系统消息'
-
     invitation:
       short_of_points: "积分不足，发送邀请所需积分：%{count}"
       has_been_invited: '你所邀请的人，已经被别人邀请过了'
@@ -128,6 +125,12 @@ zh-CN:
       message:
         points_subtraction: "你给 %{nickname} 发送了私信"
         points_addition: "%{nickname} 给你发送了私信"
+
+    message:
+      a_month: '你已经删除了一个月之外的所有消息'
+      a_week: '你已经删除了一周之外的所有消息'
+      nothing: '你已经删除了所有消息'
+      all: '系统无法识别你的操作，为你保留了所有消息'
 
 
 

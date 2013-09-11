@@ -1,4 +1,9 @@
 class Message < ActiveRecord::Base
-  default_scope order: 'messages.created_at DESC'
+  belongs_to :user
+
+  validates :changed_points, presence: true
+  validates :current_points, presence: true
+  validates :content, presence: true
   
+  default_scope order: 'messages.created_at DESC'
 end

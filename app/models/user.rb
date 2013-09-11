@@ -17,8 +17,10 @@ class User < ActiveRecord::Base
   has_many :post_down_votes, through: :voting_down_relationships, source: :votable, source_type: :Post
   has_many :comment_down_votes, through: :voting_down_relationships, source: :votable, source_type: :Comment
 
-  has_many :sent_secrets, foreign_key: :sender_id, class_name: :Secret, dependent: true
-  has_many :received_secrets, foreign_key: :receiver_id, class_name: :Secret, dependent: true
+  has_many :sent_secrets, foreign_key: :sender_id, class_name: :Secret, dependent: :destroy
+  has_many :received_secrets, foreign_key: :receiver_id, class_name: :Secret, dependent: :destroy
+
+  has_many :messages, dependent: :destroy
 
   def up_votes
     post_up_votes + comment_up_votes
@@ -233,5 +235,12 @@ class User < ActiveRecord::Base
     message.save
 
     increment! :messages_count
+  end
+
+  def destroy_messages(deleted_ids)
+    if (deleted_size = deleted_ids.size) > 0
+      Message.delete deleted_ids
+      decrement! :messages_count, deleted_size
+    end
   end
 end

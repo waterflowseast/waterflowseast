@@ -66,7 +66,7 @@ Waterflowseast::Application.routes.draw do
   end
 
   resources :secrets, only: [:new, :create, :destroy]
-  resources :messages, only: :destroy
+  delete '/messages' => 'messages#destroy_multiple', as: :destroy_multiple_messages
   resources :invitations, only: :create
 
   get '/email_confirm/:confirm_token' => 'email_confirm#new', as: :email_confirm
