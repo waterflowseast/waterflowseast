@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include Waterflowseast::TokenGenerator
   attr_accessible :nickname, :email, :password, :password_confirmation, :avatar, :words, :invitation_token
 
   has_many :following_relationships, foreign_key: :follower_id, dependent: :destroy
@@ -21,6 +22,9 @@ class User < ActiveRecord::Base
   has_many :received_secrets, foreign_key: :receiver_id, class_name: :Secret, dependent: :destroy
 
   has_many :messages, dependent: :destroy
+
+  has_many :invitations, foreign_key: :sender_id, dependent: :destroy
+  belongs_to :invitation
 
   def up_votes
     post_up_votes + comment_up_votes
@@ -242,5 +246,23 @@ class User < ActiveRecord::Base
       Message.delete deleted_ids
       decrement! :messages_count, deleted_size
     end
+  end
+
+  def invitation_token
+    invitation.token if invitation
+  end
+
+  def invitation_token=(token)
+    self.invitation = Invitation.find_by_token(token)
+  end
+
+  def send_invitation(sent_invitation)
+    # TODO: Notifier.send_invitation(sent_invitation).deliver
+
+    # you invite people, your points will be subtracted and system will send you a message
+    increment! :points_count, POINTS_CONFIG['invite']
+    receive_message POINTS_CONFIG['invite'], points_count, I18n.t('controller.invitation.message.points_subtraction', email: sent_invitation.receiver_email)
+
+    increment! :sent_invitations_count
   end
 end

@@ -1,4 +1,5 @@
 class Comment < ActiveRecord::Base
+  include Waterflowseast::TokenGenerator
   attr_accessible :commentable_id, :commentable_type, :content
 
   has_many :voting_up_relationships, as: :votable, dependent: :destroy

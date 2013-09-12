@@ -66,14 +66,21 @@ zh-CN:
 
     invitation:
       short_of_points: "积分不足，发送邀请所需积分：%{count}"
-      has_been_invited: '你所邀请的人，已经被别人邀请过了'
-      has_been_signed_up: '你所邀请的人，已经是站内用户了'
+      has_been_invited: '你所邀请的人（邮箱：%{email}），已经被别人邀请过了'
+      has_been_signed_up: '你所邀请的人（邮箱：%{email}），已经是站内用户了'
 
 
 
   # Controllers.
   #----------------------------------------------------------------------------
   controller:
+    post:
+
+    comment:
+
+    user:
+      signed_in: "%{nickname}，你已经成功登录"
+
     following_relationship:
       user_not_exist: '你所要关注的用户不存在'
       just_followed: "你已经成功关注 %{nickname}"
@@ -131,6 +138,11 @@ zh-CN:
       a_week: '你已经删除了一周之外的所有消息'
       nothing: '你已经删除了所有消息'
       all: '系统无法识别你的操作，为你保留了所有消息'
+
+    invitation:
+      just_invited: "你已经成功邀请了 %{email}，现在可以通知他去接收注册邮件了"
+      message:
+        points_subtraction: "你邀请了 %{email}"
 
 
 

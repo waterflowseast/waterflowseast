@@ -48,15 +48,23 @@ class UsersController < ApplicationController
   end
 
   def show_sent_invitations
-    
+    @sent_invitations = current_user.invitations
+    @invitation = current_user.invitations.build
   end
   
   def new
-
+    @user = User.new invitation_token: params[:invitation_token]
+    @user.email = @user.invitation.try :receiver_email
   end
 
   def create
-    
+    @user = User.new params[:user].permit(:nickname, :email, :password, :password_confirmation, :invitation_token)
+    if @user.save
+      sign_in @user
+      redirect_to @user, notice: I18n.t("controller.user.signed_in", nickname: @user.nickname)
+    else
+      render :new
+    end
   end
 
   def change_words

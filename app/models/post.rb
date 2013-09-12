@@ -1,4 +1,5 @@
 class Post < ActiveRecord::Base
+  include Waterflowseast::TokenGenerator
   attr_accessible :title, :content, :extra_info, :node_id
 
   has_many :collecting_relationships, dependent: :destroy
