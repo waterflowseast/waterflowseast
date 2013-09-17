@@ -2,6 +2,9 @@ class User < ActiveRecord::Base
   include Waterflowseast::TokenGenerator
   attr_accessible :nickname, :email, :password, :password_confirmation, :avatar, :words, :invitation_token
 
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
+
   has_many :following_relationships, foreign_key: :follower_id, dependent: :destroy
   has_many :followings, through: :following_relationships, source: :followed
   has_many :reverse_following_relationships, foreign_key: :followed_id, class_name: :FollowingRelationship, dependent: :destroy
@@ -264,5 +267,57 @@ class User < ActiveRecord::Base
     receive_message POINTS_CONFIG['invite'], points_count, I18n.t('controller.invitation.message.points_subtraction', email: sent_invitation.receiver_email)
 
     increment! :sent_invitations_count
+  end
+
+  def has_created_post(post)
+    changed_points = post.points_changed
+    node = post.node
+
+    # you create a post, if the post will cost points or gain points, then your points will be changed and system will send you a message
+    if changed_points != 0
+      increment! :points_count, changed_points
+      receive_message changed_points, points_count, I18n.t("controller.post.message.points_changed", node_group: node.node_group, node: node)
+    end
+
+    # those people who followed you will receive a message from the system
+    followeds.each do |u|
+      u.receive_message 0, u.points_count, I18n.t('controller.post.message.to_followeds', nickname: nickname, node_group: node.node_group, node: node)
+    end
+    
+    # update corresponding count
+    increment! :posts_count
+  end
+
+  def destroy_post(post)
+    post.total_comments.each {|c| c.compensate_from(post) }
+    post.cleared_by self
+    post.destroy
+  end
+
+  def has_created_comment(comment)
+    comment_or_post = comment.commentable
+    is_comment = comment_or_post.instance_of? Comment
+    type = is_comment ? I18n.t('controller.comment.is_comment') : I18n.t('controller.comment.is_post')
+
+    # you create a comment, your points will be subtracted and system will send you a message
+    increment! :points_count, POINTS_CONFIG['comment']
+    receive_message POINTS_CONFIG['comment'], points_count, I18n.t('controller.comment.message.points_subtraction', nickname: comment_or_post.user.nickname, type: type)
+
+    # update corresponding count
+    increment! :comments_count
+
+    # ancestors of the comment will increase their total_comments_count, and if the commentable of the comment is a post, the post's direct_comments_count will be increased
+    comment.ancestors.each {|c| c.increment! :total_comments_count }
+    comment_or_post.increment! :direct_comments_count unless is_comment
+  end
+
+  def destroy_comment(comment)
+    comment.total_comments.each {|c| c.compensate_from(comment) }
+    comment.cleared_by self
+    comment.destroy
+  end
+
+  def destroy_self
+    # TODO
   end
 end

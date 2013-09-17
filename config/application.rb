@@ -9,7 +9,11 @@ require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 require 'yaml'
-POINTS_CONFIG = YAML.load_file(File.expand_path('../points_config.yml', __FILE__))
+POINTS_CONFIG = YAML.load_file File.expand_path('../points_config.yml', __FILE__)
+EXTRA_CONFIG = YAML.load_file File.expand_path('../extra_config.yml', __FILE__)
+
+require 'will_paginate'
+WillPaginate.per_page = EXTRA_CONFIG['per_page']
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line

@@ -57,7 +57,7 @@ Waterflowseast::Application.routes.draw do
   resources :voting_up_relationships, only: :create
   resources :voting_down_relationships, only: :create
 
-  resources :comments, except: [:index, :show, :new] do
+  resources :comments, except: [:index, :show] do
     member do
       get :show_total_comments
       get :show_up_voters

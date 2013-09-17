@@ -75,8 +75,40 @@ zh-CN:
   #----------------------------------------------------------------------------
   controller:
     post:
+      not_exist: '你所要查看或修改的帖子不存在'
+      just_created: '你已经成功发表了帖子'
+      update_node: '你已经成功修改了帖子所在的节点'
+      update_title: '你已经成功修改了帖子的标题'
+      update_content: '你已经成功修改了帖子的内容'
+      update_extra_info: '你已经成功修改了帖子的附言'
+      just_destroyed: '你已经成功删除了帖子'
+      message:
+        points_subtraction: "你在节点组 %{node_group} 之下的节点 %{node} 发表了帖子"
+        to_followeds: "%{nickname} 在节点组 %{node_group} 之下的节点 %{node} 发表了帖子"
+        up_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
+        down_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
+        collector_compensation: "%{nickname} 的帖子被删除，系统自动删除所有收藏，你对其进行过收藏，为表示歉意，系统已经对你进行积分补偿"
+        delete_by_self: "你删除了帖子：《 %{title} 》"
+        delete_by_admin: "管理员 %{admin} 删除了你的帖子：《 %{title} 》"
 
     comment:
+      wrong_class: "无法对 %{klass} 的实例进行回复"
+      commentable_not_exist: "你所要回复的帖子或回复不存在"
+      is_comment: '回复'
+      is_post: '帖子'
+      just_created: "你已经成功回复了 %{nickname} 的 %{type}"
+      not_exist: '你所要查看或修改的回复不存在'
+      just_updated: '你已经成功修改了回复”'
+      just_destroyed: '你已经成功删除了回复'
+      message:
+        points_subtraction: "你回复了 %{nickname} 的 %{type}"
+        sub_up_voter_compensation: "%{nickname} 的 %{type} 被删除，系统自动删除所有子回复及所有赞同，你曾经赞同过某一子回复，为表示歉意，系统已经对你进行积分补偿"
+        sub_down_voter_compensation: "%{nickname} 的 %{type} 被删除，系统自动删除所有子回复及所有反对，你曾经反对过某一子回复，为表示歉意，系统已经对你进行积分补偿"
+        sub_commenter_compensation: "%{nickname} 的 %{type} 被删除，系统自动删除所有子回复，你曾经有过回复，为表示歉意，系统已经对你进行积分补偿"
+        up_voter_compensation: "%{nickname} 的回复被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
+        down_voter_compensation: "%{nickname} 的回复被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
+        delete_by_self: "你删除了回复"
+        delete_by_admin: "管理员 %{admin} 删除了你的回复"
 
     user:
       signed_in: "%{nickname}，你已经成功登录"
