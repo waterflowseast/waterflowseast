@@ -19,10 +19,11 @@ class CommentAbility
     return AbilityResult.new(true) if current_user.admin?
     return AbilityResult.new(false, I18n.t('ability.comment.wrong_user')) if current_user != comment.user
 
-    if comment.created_at > 1.hour.ago
+    time_limit = EXTRA_CONFIG['comment_out_of_time_in_minutes']
+    if comment.created_at > time_limit.minutes.ago
       AbilityResult.new(true)
     else
-      AbilityResult.new(false, I18n.t('ability.comment.out_of_time'))
+      AbilityResult.new(false, I18n.t('ability.comment.out_of_time', time_limit: time_limit))
     end
   end
 

@@ -2,7 +2,7 @@ class Comment < ActiveRecord::Base
   include Waterflowseast::TokenGenerator
   attr_accessible :commentable, :content
 
-  belongs_to :commentable, polymorphic: true
+  belongs_to :commentable, polymorphic: true, touch: true
   belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
 
@@ -59,10 +59,10 @@ class Comment < ActiveRecord::Base
     comment_ancestors
   end
 
-  def total_comments
+  def sub_comments
     comments.map do |comment; result|
       result = [comment]
-      result << comment.total_comments if comment.total_comments_count > 0
+      result << comment.sub_comments if comment.total_comments_count > 0
       result
     end.flatten
   end
@@ -71,15 +71,19 @@ class Comment < ActiveRecord::Base
     type = comment_or_post.instance_of?(Comment) ? I18n.t('controller.comment.is_comment') : I18n.t('controller.comment.is_post')
     comment_or_post_user = comment_or_post.user
 
-    (up_voters - [comment_or_post_user]).each do |u|
-      u.increment! :points_count, POINTS_CONFIG['up_voter_compensation']
-      u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.comment.message.sub_up_voter_compensation', nickname: comment_or_post_user.nickname, type: type)
+    up_voters.each do |u|
+      if u != comment_or_post_user
+        u.increment! :points_count, POINTS_CONFIG['up_voter_compensation']
+        u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.comment.message.sub_up_voter_compensation', nickname: comment_or_post_user.nickname, type: type)
+      end
       u.decrement! :up_votes_count
     end
 
-    (down_voters - [comment_or_post_user]).each do |u|
-      u.increment! :points_count, POINTS_CONFIG['down_voter_compensation']
-      u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.comment.message.sub_down_voter_compensation', nickname: comment_or_post_user.nickname, type: type)
+    down_voters.each do |u|
+      if u != comment_or_post_user
+        u.increment! :points_count, POINTS_CONFIG['down_voter_compensation']
+        u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.comment.message.sub_down_voter_compensation', nickname: comment_or_post_user.nickname, type: type)
+      end
       u.decrement! :down_votes_count
     end
 

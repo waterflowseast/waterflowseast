@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
   include Waterflowseast::TokenGenerator
   attr_accessible :nickname, :email, :password, :password_confirmation, :avatar, :words, :invitation_token
+  has_secure_password
 
-  has_many :posts, dependent: :destroy
-  has_many :comments, dependent: :destroy
+  has_many :posts
+  has_many :comments
 
   has_many :following_relationships, foreign_key: :follower_id, dependent: :destroy
   has_many :followings, through: :following_relationships, source: :followed
@@ -29,12 +30,91 @@ class User < ActiveRecord::Base
   has_many :invitations, foreign_key: :sender_id, dependent: :destroy
   belongs_to :invitation
 
+  validates :nickname, presence: true, format: { with: Waterflowseast::Regex.nickname }, uniqueness: { case_sensitive: false }
+  validates :email, presence: true, format: { with: Waterflowseast::Regex.email }, uniqueness: { case_sensitive: false }
+  validates :password, presence: true, length: { minimum: EXTRA_CONFIG['password_min'], maximum: EXTRA_CONFIG['password_max'] }, if: :password_changed?, if: :new_record?
+  validates :password_confirmation, presence: true, if: :password_changed?, if: :new_record?
+  validates :words, length: { maximum: EXTRA_CONFIG['words_max'] }, if: ->(user) { ! user.words.nil? }
+  validates :invitation_id, presence: true, if: ->(user) { user.new_record? and User.last.id >= EXTRA_CONFIG['sign_in_limit_without_invitation'] }
+  validate :invitation_check, if: ->(user) { user.new_record? and ! user.invitation.nil? }
+
+  before_create { generate_token :permalink }
+  after_save :reset_password_changed, if: :password_changed?
+
+  scope :available_users, -> { where("users.signed_up_confirmed_at IS NOT NULL") }
+
+  def to_param
+    permalink
+  end
+
+  def self.find(id)
+    find_by_permalink(id)
+  end
+
+  def self.select_sort(sort)
+    case sort
+    when 'sign_up_early'
+      order('users.signed_up_confirmed_at ASC')
+    when 'sign_in_lately'
+      order('users.last_signed_in_at DESC')
+    when 'followeds_most'
+      order('users.followeds_count DESC')
+    when 'great_posts_most'
+      order('users.great_posts_count DESC')
+    when 'posts_most'
+      order('users.posts_count DESC')
+    when 'points_most'
+      order('users.points_count DESC')
+    else
+      scoped
+    end
+  end
+
+  def invitation_check
+    receiver_email = invitation.receiver_email
+
+    errors.add :invitation_id, :not_same, receiver_email: receiver_email if receiver_email != email
+    errors.add :invitation_id, :signed_up, receiver_email: receiver_email if User.find_by_email receiver_email
+  end
+
+  def email=(unprocessed_email)
+    write_attribute :email, unprocessed_email.downcase
+  end
+
+  def password=(unencrypted_password)
+    super
+    @password_changed = true
+
+    unless unencrypted_password.blank?
+      generate_token :remember_token
+    end
+  end
+
+  def password_changed?
+    @password_changed ||= false
+  end
+
+  def reset_password_changed
+    @password_changed = false
+  end
+
+  # This is basically useless, because the result is an Array of different instances (of Post and Comment), not ActiveRecord::Relation,
+  # so you can't do paginate. This is used only if all you need is all the up_votes and no extra filtering conditions are required.
+  # By the way, if you want to know how to do the paginate, you can read show_up_votes method in app/controllers/users_controller.rb
   def up_votes
     post_up_votes + comment_up_votes
   end
 
   def down_votes
     post_down_votes + comment_down_votes
+  end
+
+  def available_sent_secrets
+    sent_secrets.where(sender_deleted: false)
+  end
+
+  def available_received_secrets
+    received_secrets.where(receiver_deleted: false)
   end
 
   def has_followed?(other_user)
@@ -260,7 +340,7 @@ class User < ActiveRecord::Base
   end
 
   def send_invitation(sent_invitation)
-    # TODO: Notifier.send_invitation(sent_invitation).deliver
+    Notifier.send_invitation(sent_invitation).deliver
 
     # you invite people, your points will be subtracted and system will send you a message
     increment! :points_count, POINTS_CONFIG['invite']
@@ -289,7 +369,7 @@ class User < ActiveRecord::Base
   end
 
   def destroy_post(post)
-    post.total_comments.each {|c| c.compensate_from(post) }
+    post.sub_comments.each {|c| c.compensate_from(post) }
     post.cleared_by self
     post.destroy
   end
@@ -312,12 +392,90 @@ class User < ActiveRecord::Base
   end
 
   def destroy_comment(comment)
-    comment.total_comments.each {|c| c.compensate_from(comment) }
+    comment_or_post = comment.commentable
+    is_comment = comment_or_post.instance_of? Comment
+
+    deleted_sub_comments = comment.sub_comments
+    deleted_comments_count = deleted_sub_comments.count + 1
+
+    comment.ancestors.each {|c| c.decrement! :total_comments_count, deleted_comments_count }
+    comment_or_post.decrement! :direct_comments_count unless is_comment
+
+    deleted_sub_comments.each {|c| c.compensate_from(comment) }
     comment.cleared_by self
     comment.destroy
   end
 
   def destroy_self
-    # TODO
+    followings.each {|u| u.decrement! :followeds_count }
+    followeds.each {|u| u.decrement! :followings_count }
+    collections.each {|p| p.decrement! :collectors_count }
+    up_votes.each {|v| v.decrement! :up_voters_count }
+    down_votes.each {|v| v.decrement! :down_voters_count }
+    sent_secrets.where(receiver_deleted: false).map(&:receiver).each {|u| u.decrement! :received_secrets_count }
+    received_secrets.where(sender_deleted: false).map(&:sender).each {|u| u.decrement! :sent_secrets_count }
+    User.where(invitation_id: invitations.pluck(:id)).update_all invitation_id: nil
+    comments.each {|c| destroy_comment(c) }
+    posts.each {|p| destroy_post(p) }
+
+    destroy
+  end
+
+  def send_email_confirm
+    generate_token :confirm_token and save!
+    Notifier.send_email_confirm(self).deliver
+  end
+
+  def confirmed?
+    ! signed_up_confirmed_at.nil?
+  end
+
+  def out_of_confirm?
+    created_at < EXTRA_CONFIG['confirm_out_of_time_in_hours'].hours.ago
+  end
+
+  def confirm_email
+    touch :signed_up_confirmed_at
+    touch :last_signed_in_at
+
+    # you confirmed your account, your points will be added and system will send you a message
+    increment! :points_count, POINTS_CONFIG['new_account']
+    receive_message POINTS_CONFIG['new_account'], points_count, I18n.t('controller.email_confirm.message.points_addition', email: email)
+  end
+
+  def send_password_reset
+    generate_token :reset_token
+    self.reset_deadline = EXTRA_CONFIG['reset_out_of_time_in_minutes'].minutes.from_now
+    save!
+
+    Notifier.send_password_reset(self).deliver
+  end
+
+  def out_of_reset?
+    reset_deadline < Time.zone.now
+  end
+
+  def reset_password
+    self.reset_token = nil
+    self.reset_deadline = nil
+    save!
+  end
+
+  def can_get_signin_points?
+    last_signed_in_at.beginning_of_day < Time.zone.now.beginning_of_day
+  end
+
+  def signin
+    if can_get_signin_points?
+      increment! :points_count, POINTS_CONFIG['normal_day_sign_in']
+      receive_message POINTS_CONFIG['normal_day_sign_in'], points_count, I18n.t('controller.session.message.normal_day_sign_in')
+
+      if Time.zone.now.mday == 1
+        increment! :points_count, POINTS_CONFIG['first_month_day_sign_in']
+        receive_message POINTS_CONFIG['first_month_day_sign_in'], points_count, I18n.t('controller.session.message.first_month_day_sign_in')
+      end
+    end
+
+    touch :last_signed_in_at
   end
 end

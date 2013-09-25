@@ -6,7 +6,7 @@ class Secret < ActiveRecord::Base
 
   validates :sender_id, presence: true
   validates :receiver_id, presence: true
-  validates :content, presence: true, length: { minimum: 10 }
+  validates :content, presence: true, length: { minimum: EXTRA_CONFIG['secret_content_min'] }
   
   default_scope order: 'secrets.created_at DESC'
 

@@ -12,7 +12,7 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.reorder('')
-    @posts = @posts.search(params[:serach]) if params[:search]
+    @posts = @posts.search(params[:search]) if params[:search]
     @posts = @posts.select_hot(params[:hot]) if params[:hot]
     @posts = @posts.select_time(params[:time]) if params[:time]
 

@@ -74,7 +74,7 @@ Waterflowseast::Application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update]
 
   namespace :admin do
-    root to: 'admin/node_groups#index'
+    root to: 'node_groups#index'
 
     resources :node_groups, except: [:show, :destroy]
     resources :nodes, except: [:index, :show, :destroy]

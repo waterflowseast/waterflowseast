@@ -27,10 +27,11 @@ class PostAbility
     return AbilityResult.new(true) if current_user.admin?
     return AbilityResult.new(false, I18n.t('ability.post.wrong_user')) if current_user != post.user
 
-    if post.created_at > 1.day.ago
+    time_limit = EXTRA_CONFIG['post_out_of_time_in_hours']
+    if post.created_at > time_limit.hours.ago
       AbilityResult.new(true)
     else
-      AbilityResult.new(false, I18n.t('ability.post.out_of_time'))
+      AbilityResult.new(false, I18n.t('ability.post.out_of_time', time_limit: time_limit))
     end
   end
 

@@ -18,6 +18,7 @@ class Post < ActiveRecord::Base
 
   validates :title, presence: true, length: { minimum: EXTRA_CONFIG['post_title_min'], maximum: EXTRA_CONFIG['post_title_max'] }
   validates :content, presence: true, length: { minimum: EXTRA_CONFIG['post_content_min'] }
+  validates :extra_info, length: { minimum: EXTRA_CONFIG['post_extra_info_min'] }, if: ->(post) { ! post.extra_info.nil? }
   validates :user_id, presence: true
   validates :node_id, presence: true, inclusion: { in: Node.pluck(:id) }
 
@@ -125,10 +126,10 @@ class Post < ActiveRecord::Base
     self
   end
 
-  def total_comments
+  def sub_comments
     comments.map do |comment; result|
       result = [comment]
-      result << comment.total_comments if comment.total_comments_count > 0
+      result << comment.sub_comments if comment.total_comments_count > 0
       result
     end.flatten
   end

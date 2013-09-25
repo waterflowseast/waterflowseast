@@ -1,5 +1,19 @@
 # 当用户数达到以下值时，之后的注册都需要邀请码
-sign_in_limit_without_invitation: 5000
+sign_in_limit_without_invitation: 8000
+
+# 回复的内容可在以下时间内进行更改，单位为分钟
+comment_out_of_time_in_minutes: 15
+# 帖子的内容可在以下时间内进行更改，单位为小时
+post_out_of_time_in_hours: 3
+# 邮箱验证需在以下时间内完成，单位为小时
+confirm_out_of_time_in_hours: 24
+# 密码重置需在以下时间内完成，单位为分钟
+reset_out_of_time_in_minutes: 30
+
+# 节点组名称的最大长度
+node_group_name_max: 16
+# 节点名称的最大长度
+node_name_max: 16
 
 # 帖子标题的最小长度
 post_title_min: 10
@@ -7,8 +21,19 @@ post_title_min: 10
 post_title_max: 80
 # 帖子内容的最小长度
 post_content_min: 30
+# 帖子附言的最小长度
+post_extra_info_min: 10
 # 回复内容的最小长度
 comment_content_min: 10
+# 私信内容的最小长度
+secret_content_min: 10
+
+# 登录密码最小长度
+password_min: 6
+# 登录密码最大长度
+password_max: 20
+# 语录的最大长度
+words_max: 21
 
 # 点击首页 所有热门 下的 高收藏 时，只显示收藏数大于以下值的帖子
 collectors_limit: 0
@@ -19,3 +44,16 @@ total_comments_limit: 0
 
 # will_paginate 每页显示的数量
 per_page: 20
+
+# 技术节点组，在这些节点组所包含的任意节点下发表帖子，不会扣积分
+technicals:
+- 前端开发
+- 后端开发
+- 功能开发
+- 上线运行
+
+# 孩童节点，在这些节点下发表帖子，不仅不扣积分，还会给你积分奖励
+children:
+- 儿歌
+- 寓言
+- 儿童文学

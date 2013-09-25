@@ -7,7 +7,8 @@ class InvitationsController < ApplicationController
       current_user.send_invitation(@invitation)
       redirect_to show_sent_invitations_user_path(current_user), notice: I18n.t('controller.invitation.just_invited', email: @invitation.receiver_email)
     else
-      @sent_invitations = current_user.invitations
+      @user = current_user
+      @sent_invitations = @user.invitations.paginate page: params[:page]
       render 'users/show_sent_invitations'
     end
   end

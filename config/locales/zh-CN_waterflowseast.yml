@@ -9,6 +9,35 @@ zh-CN:
 
 
 
+  # Notifier(send email).
+  #----------------------------------------------------------------------------
+  notifier:
+    send_invitation:
+      subject: 'WaterFlowsEast.com 的注册邀请'
+    send_email_confirm:
+      subject: 'WaterFlowsEast.com 的邮箱验证'
+    send_password_reset:
+      subject: 'WaterFlowsEast.com 的密码重置'
+
+
+
+  # ActiveRecord
+  #----------------------------------------------------------------------------
+  activerecord:
+    attributes:
+      user:
+        invitation_id: ''
+    errors:
+      models:
+        user:
+          attributes:
+            invitation_id:
+              blank: '必须拥有别人的邀请才能进行注册'
+              not_same: "别人邀请你时所填写的邮箱（ %{receiver_email} ）与你现在所填写的邮箱不一致"
+              signed_up: "你已经是站内用户了，邮箱帐号：%{receiver_email}"
+
+
+
   # Abilities.
   #----------------------------------------------------------------------------
   ability:
@@ -18,7 +47,7 @@ zh-CN:
       short_of_points: "积分不足，发布此帖所需积分：%{count}"
       not_authorized_to_update: '你不是管理员，也不是这个帖子的发布者，不能修改这个帖子'
       wrong_user: '你不是这个帖子的发布者，不能修改这个帖子'
-      out_of_time: '超出可修改的时间，帖子只能在发布后一天内进行修改'
+      out_of_time: '超出可修改的时间，帖子只能在发布后 %{time_limit} 小时内进行修改'
       can_not_be_deleted: '系统认为这是个有价值的帖子，不能将其删除'
       not_authorized_to_delete: '你不是这个帖子的发布者，不能删除这个帖子'
       short_of_points_to_delete: "积分不足，删除此帖所需积分：%{count}"
@@ -26,7 +55,7 @@ zh-CN:
     comment:
       short_of_points: "积分不足，回复所需积分：%{count}"
       wrong_user: '这个回复不是你所发表的，你不能修改这个回复'
-      out_of_time: '超出可修改的时间，回复只能在发表后一小时内进行修改'
+      out_of_time: '超出可修改的时间，回复只能在发表后 %{time_limit} 分钟内进行修改'
       not_authorized_to_delete: '你没有发表这个回复，不能将其删除'
       short_of_points_to_delete: "积分不足，删除回复所需积分：%{count}"
 
@@ -74,6 +103,18 @@ zh-CN:
   # Controllers.
   #----------------------------------------------------------------------------
   controller:
+    admin:
+      application:
+        admin_only: '只有管理员才有权限访问这些页面'
+      node_group:
+        just_created: "你成功创建了 %{node_group} 节点组"
+        not_exist: '你所要修改的节点组不存在'
+        just_updated: '节点组已更新'
+      node:
+        just_created: "你在 %{node_group} 节点组下成功创建了 %{node} 节点"
+        not_exist: '你所要修改的节点不存在'
+        just_updated: '节点已更新'
+
     post:
       not_exist: '你所要查看或修改的帖子不存在'
       just_created: '你已经成功发表了帖子'
@@ -111,7 +152,12 @@ zh-CN:
         delete_by_admin: "管理员 %{admin} 删除了你的回复"
 
     user:
-      signed_in: "%{nickname}，你已经成功登录"
+      not_exist: '你所要查看或修改的用户不存在'
+      confirm_now: "邮箱帐号 %{email} 注册成功，请登录邮箱进行验证，%{time_limit} 小时内有效，超出时间未验证，帐号将被系统删除"
+      update_words: '你已经成功修改了语录'
+      update_avatar: '你已经成功修改了头像'
+      update_password: '你已经成功修改了密码'
+      just_destroyed: "帐号 %{nickname} 已经被删除"
 
     following_relationship:
       user_not_exist: '你所要关注的用户不存在'
@@ -138,7 +184,7 @@ zh-CN:
     voting_up_relationship:
       wrong_class: "无法对 %{klass} 的实例表示赞同"
       votable_not_exist: '你所要赞同的帖子或回复不存在'
-      just_voted_up: "你已经给 %{nickname} 的帖子或回复表示了赞同"
+      just_voted_up: "你已经对 %{nickname} 的帖子或回复表示了赞同"
       message:
         points_subtraction: "你对 %{nickname} 的帖子或回复表示了赞同"
         points_addition: "%{nickname} 对你的帖子或回复表示了赞同"
@@ -149,7 +195,7 @@ zh-CN:
     voting_down_relationship:
       wrong_class: "无法对 %{klass} 的实例表示反对"
       votable_not_exist: '你所要反对的帖子或回复不存在'
-      just_voted_down: "你已经给 %{nickname} 的帖子或回复表示了反对"
+      just_voted_down: "你已经对 %{nickname} 的帖子或回复表示了反对"
       message:
         points_subtraction: "你对 %{nickname} 的帖子或回复表示了反对"
         warning: "%{nickname} 对你的帖子或回复表示了反对"
@@ -172,9 +218,34 @@ zh-CN:
       all: '系统无法识别你的操作，为你保留了所有消息'
 
     invitation:
-      just_invited: "你已经成功邀请了 %{email}，现在可以通知他去接收注册邮件了"
+      just_invited: "你已经成功邀请了 %{email}，现在可以通知Ta去接收注册邮件了"
       message:
         points_subtraction: "你邀请了 %{email}"
+
+    email_confirm:
+      user_not_exist: '你所提供的邮箱验证码是无效的，系统找不到与此验证码相关联的用户'
+      confirmed: '你要进行验证的邮箱已经被验证过了，不需要多次验证'
+      out_of_time: "邮箱帐号 %{email} 已经失效，因为你没有在 %{time_limit} 小时内进行验证，现在你只能选择其他邮箱进行注册"
+      just_confirmed: "邮箱 %{email} 验证成功。欢迎加入本站，希望你能在这里找到答案、学到知识、交到朋友"
+      message:
+        points_addition: "邮箱 %{email} 验证成功"
+
+    password_reset:
+      invalid_format: "你所提交的邮箱 %{email} 格式不正确，请输入有效的邮箱"
+      not_confirmed: "你所输入的邮箱为 %{email}，但是该邮箱帐号还没有验证，请先进行邮箱验证"
+      reset_now: "邮件已发送至 %{email}，密码重置在 %{time_limit} 分钟内有效，若超时，你可再次填写邮箱进行密码重置"
+      user_not_exist: '请检查密码重置的链接是否正确或是否已过期，系统无法找到相关的用户'
+      out_of_time: "本次密码重置已经失效，因为你没有在 %{time_limit} 分钟内进行操作，现在你可在本页面重新填写邮箱进行密码重置"
+      just_reset: "密码重置成功，现在你已经登录"
+
+    session:
+      not_confirmed: "%{nickname}，你的邮箱帐号（%{email}）还没有验证，请先进行邮箱验证"
+      not_match: '帐号和密码不匹配，请检查你的输入是否正确'
+      sign_in: "%{nickname}，你已经成功登录"
+      sign_out: "%{nickname}, 已经成功退出"
+      message:
+        normal_day_sign_in: '日常登录获得积分'
+        first_month_day_sign_in: '月初登录获得积分'
 
 
 
@@ -183,6 +254,8 @@ zh-CN:
   helper:
     application:
       base_title: 'Ruby平台的Web开发'
+    session:
+      sign_in_first: '登录之后才能查看或进行其他操作，如果还没注册，请先注册帐号'
 
 
 
