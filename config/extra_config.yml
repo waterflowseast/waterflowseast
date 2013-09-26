@@ -35,6 +35,9 @@ password_max: 20
 # 语录的最大长度
 words_max: 21
 
+# 回复的最大嵌套层次
+nested_level_max: 5
+
 # 点击首页 所有热门 下的 高收藏 时，只显示收藏数大于以下值的帖子
 collectors_limit: 0
 # 点击首页 所有热门 下的 高赞同 时，只显示赞同数大于以下值的帖子

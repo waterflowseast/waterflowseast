@@ -59,6 +59,10 @@ class Comment < ActiveRecord::Base
     comment_ancestors
   end
 
+  def too_deep?
+    ancestors.size > EXTRA_CONFIG['nested_level_max']
+  end
+
   def sub_comments
     comments.map do |comment; result|
       result = [comment]

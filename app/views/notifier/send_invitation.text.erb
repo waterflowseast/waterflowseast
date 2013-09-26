@@ -1,3 +1,5 @@
-Notifier#send_invitation
+注册邀请
+---
 
-<%= @greeting %>, find me in app/views/app/views/notifier/send_invitation.text.erb
+复制以下链接到浏览器，进行注册
+<%= signup_url(invitation_token: @invitation.token) %>

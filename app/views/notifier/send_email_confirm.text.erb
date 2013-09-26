@@ -1,3 +1,5 @@
-Notifier#send_email_confirm
+邮箱验证
+---
 
-<%= @greeting %>, find me in app/views/app/views/notifier/send_email_confirm.text.erb
+复制以下链接到浏览器，进行验证
+<%= email_confirm_url(confirm_token: @user.confirm_token) %>

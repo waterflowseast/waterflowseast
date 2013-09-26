@@ -47,7 +47,7 @@ Waterflowseast::Application.routes.draw do
     end
   end
 
-  get '/signup/(:invitation_token)' => 'users#new'
+  get '/signup/(:invitation_token)' => 'users#new', as: :signup
   get '/signin' => 'sessions#new'
   delete '/signout' => 'sessions#destroy'
   resources :sessions, only: [:new, :create, :destroy]

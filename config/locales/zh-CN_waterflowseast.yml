@@ -54,6 +54,7 @@ zh-CN:
 
     comment:
       short_of_points: "积分不足，回复所需积分：%{count}"
+      too_deep: '回复的嵌套层次太深，系统不允许此次回复'
       wrong_user: '这个回复不是你所发表的，你不能修改这个回复'
       out_of_time: '超出可修改的时间，回复只能在发表后 %{time_limit} 分钟内进行修改'
       not_authorized_to_delete: '你没有发表这个回复，不能将其删除'

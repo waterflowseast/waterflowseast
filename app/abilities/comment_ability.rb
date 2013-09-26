@@ -8,10 +8,12 @@ class CommentAbility
 
   def create?
     points_cost = POINTS_CONFIG['comment'].abs
-    if current_user.points_count >= points_cost
-      AbilityResult.new(true)
+    return AbilityResult.new(false, I18n.t('ability.comment.short_of_points', count: points_cost)) if current_user.points_count < points_cost
+
+    if comment.too_deep?
+      AbilityResult.new(false, I18n.t('ability.comment.too_deep'))
     else
-      AbilityResult.new(false, I18n.t('ability.comment.short_of_points', count: points_cost))
+      AbilityResult.new(true)
     end
   end
 
