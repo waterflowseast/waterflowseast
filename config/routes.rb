@@ -65,6 +65,12 @@ Waterflowseast::Application.routes.draw do
     end
   end
 
+  scope module: 'introductions' do
+    get :introduction
+    get :points
+    get :markdown
+  end
+
   resources :secrets, only: [:new, :create, :destroy]
   delete '/messages' => 'messages#destroy_multiple', as: :destroy_multiple_messages
   resources :invitations, only: :create

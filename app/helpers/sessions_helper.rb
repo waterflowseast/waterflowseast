@@ -1,11 +1,7 @@
 module SessionsHelper
-  def sign_in(user, permanent = false)
-    if permanent
-      cookies.permanent[:remember_token] = user.remember_token
-    else
-      cookies[:remember_token] = user.remember_token
-    end
-
+  def sign_in(user, remember_me = false)
+    expires_at = remember_me ? 2.weeks.from_now : 8.hours.from_now
+    cookies[:remember_token] = { value: user.remember_token, expires: expires_at }
     self.current_user = user
   end
 
@@ -37,8 +33,12 @@ module SessionsHelper
     end
   end
 
+  def authenticate_no_user!
+    redirect_to root_path, alert: I18n.t('helper.session.already_signed_in') if signed_in?
+  end
+
   def store_location
-    session[:return_to] = request.fullpath
+    session[:return_to] = request.fullpath if request.get?
   end
 
   def stored_location

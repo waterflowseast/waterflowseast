@@ -1,0 +1,30 @@
+<% provide :title, t('view.post.change.title_post_title') %>
+
+<%= render 'posts/post_info', post: @post %>
+<hr />
+
+<h4><%= t('view.post.change.title_post_title') %></h4>
+
+<%= render 'shared/error_messages', object: @post %>
+<%= form_for @post, url: update_title_post_path(@post) do |f| %>
+  <fieldset>
+    <div class="row collapse">
+      <div class="small-2 columns">
+        <span class="prefix"><%= t('view.post.new.post_title') %></span>
+      </div>
+      <div class="small-10 columns">
+        <%= f.text_field :title %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <%= f.submit t('view.post.change.submit'), class: "button prefix sign-button" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/post', post: @post %>
+<% end %>

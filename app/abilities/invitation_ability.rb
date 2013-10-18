@@ -1,4 +1,4 @@
-class InvitationController
+class InvitationAbility
   attr_reader :current_user, :invitation
 
   def initialize(current_user, invitation)

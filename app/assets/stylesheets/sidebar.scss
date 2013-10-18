@@ -1,4 +1,3 @@
-
 .sub-nav {
   margin-top: emCalc(-15px);
   margin-bottom: emCalc(6px);
@@ -28,12 +27,14 @@
 
 .wfe-sidebar-form {
   margin-left: 24px;
+  margin-bottom: 2px;
 }
 
 #sidebar table {
   background: $wfe-body-bg-color;
   border: none;
-  margin-top: -6px;
+  margin-top: -8px;
+  margin-bottom: 12px;
   margin-left: 14px;
 
   tr {

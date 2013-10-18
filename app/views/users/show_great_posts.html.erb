@@ -1,0 +1,21 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.show.great_posts') %></h4>
+<br />
+
+<% if @great_posts.any? %>
+  <div id="great_posts">
+    <% @great_posts.each do |great_post| %>
+      <%= render 'posts/post', post: great_post %>
+    <% end %>
+
+    <%= paging @great_posts %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

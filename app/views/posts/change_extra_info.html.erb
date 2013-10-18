@@ -1,0 +1,36 @@
+<% provide :title, t('view.post.change.title_extra_info') %>
+
+<%= render 'posts/post_info', post: @post %>
+<hr />
+
+<h4><%= t('view.post.change.title_extra_info') %></h4>
+
+<%= render 'shared/error_messages', object: @post %>
+<%= form_for @post, url: update_extra_info_post_path(@post) do |f| %>
+  <fieldset>
+    <%= link_to t('view.shared._grammar.hint'), '#', data: { reveal_id: "markdown-grammar" } %>
+    <br />
+    <br />
+
+    <div class="row">
+      <div class="small-12 columns">
+        <%= f.text_area :extra_info, rows: 20 %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-6 columns">
+        <%= link_to t('view.post.new.preview'), '#', class: "button prefix sign-button" %>
+      </div>
+      <div class="small-6 columns">
+        <%= f.submit t('view.post.change.submit'), class: "button prefix sign-button" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<%= render 'shared/grammar' %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/post', post: @post %>
+<% end %>

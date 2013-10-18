@@ -9,7 +9,7 @@ class Node < ActiveRecord::Base
 
   validates :name, presence: true, length: { maximum: EXTRA_CONFIG['node_name_max'] }
   validates :position, presence: true, if: :persisted?
-  validates :node_group_id, presence: true, inclusion: { in: NodeGroup.pluck(:id) }
+  validates :node_group_id, presence: true, inclusion: { in: ->(record) { NodeGroup.pluck(:id) } }
 
   before_create { generate_token :permalink }
 
@@ -17,10 +17,6 @@ class Node < ActiveRecord::Base
 
   def to_param
     permalink
-  end
-
-  def self.find(id)
-    find_by_permalink(id)
   end
 
   def self.children

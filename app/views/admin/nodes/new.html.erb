@@ -1,0 +1,56 @@
+<% provide :title, t('view.admin.node.new.title') %>
+
+<h4><%= t('view.admin.node.new.title') %></h4>
+
+<%= render 'shared/error_messages', object: @node %>
+<%= form_for [:admin, @node], class: 'custom' do |f| %>
+  <fieldset>
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.admin.node.new.name') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :name %>
+          </div>
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.admin.node.new.position') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :position_text %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.admin.node.new.node_group') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.collection_select :node_group_id, NodeGroup.all, :id, :name, {}, class: 'chosen-select' %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+      <div class="large-12 columns">
+        <%= f.submit t('view.admin.node.new.submit'), class: 'button postfix sign-button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/admin' %>
+<% end %>

@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_filter :authenticate_no_user!, only: [:new, :create]
+
   def new
   end
 
@@ -19,8 +21,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    nickname = current_user.nickname
     sign_out
-    redirect_to root_path, notice: I18n.t('controller.session.sign_out', nickname: nickname)
+    redirect_to root_path, notice: I18n.t('controller.session.sign_out')
   end
 end

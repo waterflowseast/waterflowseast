@@ -1,0 +1,33 @@
+<h4><%= link_to t('view.sidebar._posts.times'), params.merge(time: nil, page: nil) %></h4>
+
+<dl class="sub-nav wfe-sub-nav">
+  <%= highlight_dd_link :time, t('view.sidebar._posts.today'), params.merge(time: 'today', page: nil) %>
+  <%= highlight_dd_link :time, t('view.sidebar._posts.three_days'), params.merge(time: 'three_days', page: nil) %>
+  <%= highlight_dd_link :time, t('view.sidebar._posts.a_week'), params.merge(time: 'a_week', page: nil) %>
+  <%= highlight_dd_link :time, t('view.sidebar._posts.a_month'), params.merge(time: 'a_month', page: nil) %>
+</dl>
+
+<h4><%= link_to t('view.sidebar._posts.hots'), params.merge(hot: nil, page: nil) %></h4>
+
+<dl class="sub-nav wfe-sub-nav">
+  <%= highlight_dd_link :hot, t('view.sidebar._posts.collectors'), params.merge(hot: 'collectors', page: nil) %>
+  <%= highlight_dd_link :hot, t('view.sidebar._posts.up_voters'), params.merge(hot: 'up_voters', page: nil) %>
+  <%= highlight_dd_link :hot, t('view.sidebar._posts.comments'), params.merge(hot: 'comments', page: nil) %>
+  <%= highlight_dd_link :hot, t('view.sidebar._posts.views'), params.merge(hot: 'views', page: nil) %>
+</dl>
+
+<h4><%= link_to t('view.sidebar._posts.nodes'), params.merge(node_group: nil, node: nil, page: nil) %></h4>
+
+<% node_groups.each do |node_group| %>
+  <dl class="sub-nav wfe-sub-nav">
+    <%= highlight_dd_link [:node_group, :node], node_group.name, params.merge(node_group: node_group.permalink, node: nil, page: nil) %>
+  </dl>
+
+  <% if node_group.nodes.present? %>
+    <dl class="sub-nav">
+      <% node_group.nodes.each do |node| %>
+        <%= highlight_dd_link [:node_group, :node], node.name, params.merge(node_group: nil, node: node.permalink, page: nil) %>
+      <% end %>
+    </dl>
+  <% end %>
+<% end %>

@@ -1,0 +1,20 @@
+<div class="message">
+  <div class="avatar">
+    <%= avatar_link current_user, :small %>
+  </div>
+
+  <div class="main">
+    <div class="headline">
+      <span><%= current_user.nickname %></span>
+      <span><%= message.created_at.strftime('%Y-%m-%d') %></span>
+      <span><%= image_tag('change.png', size: '13x13', class: 'wfe-image-change') %> <%= message.changed_points_display %></span>
+      <span><%= image_tag('point.png', size: '13x13', class: 'wfe-image-point') %> <%= message.current_points %></span>
+    </div>
+
+    <div class="content">
+      <p><%= message.content %></p>
+    </div>
+
+    <div class="wfe-clear"></div>
+  </div>
+</div>

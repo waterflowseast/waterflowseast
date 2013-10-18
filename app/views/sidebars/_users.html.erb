@@ -1,0 +1,23 @@
+<h4><%= link_to t('view.sidebar._users.sorts'), users_path %></h4>
+
+<dl class="sub-nav wfe-sub-nav">
+  <%= highlight_dd_link :sort, t('view.sidebar._users.sign_up_early'), sort: 'sign_up_early' %>
+  <%= highlight_dd_link :sort, t('view.sidebar._users.sign_in_lately'), sort: 'sign_in_lately' %>
+  <%= highlight_dd_link :sort, t('view.sidebar._users.followeds_most'), sort: 'followeds_most' %>
+  <%= highlight_dd_link :sort, t('view.sidebar._users.great_posts_most'), sort: 'great_posts_most' %>
+  <%= highlight_dd_link :sort, t('view.sidebar._users.posts_most'), sort: 'posts_most' %>
+  <%= highlight_dd_link :sort, t('view.sidebar._users.points_most'), sort: 'points_most' %>
+</dl>
+
+<h4><%= t('view.sidebar._users.search_users') %></h4>
+
+<%= form_tag users_path, method: :get, class: 'wfe-sidebar-form' do %>
+  <div class="row collapse">
+    <div class="small-10 columns">
+      <%= text_field_tag :search, params[:search], placeholder: t('view.sidebar._users.placeholder') %>
+    </div>
+    <div class="small-2 columns">
+      <%= submit_tag t('view.sidebar._users.search_button'), class: 'button postfix' %>
+    </div>
+  </div>
+<% end %>

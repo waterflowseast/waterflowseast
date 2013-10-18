@@ -1,0 +1,21 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.show.followeds') %></h4>
+<br />
+
+<% if @followeds.any? %>
+  <div id="followeds">
+    <% @followeds.each do |followed| %>
+      <%= render 'users/user', user: followed %>
+    <% end %>
+
+    <%= paging @followeds %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

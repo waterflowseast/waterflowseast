@@ -1,0 +1,52 @@
+<div id="logo-area">
+  <div id="logo">
+    <%= link_to '流', root_path %>
+  </div>
+  <div id="logo-time">
+    <%= l Date.today, format: '%A' %><br />
+    <%= Date.today %>
+  </div>
+</div>
+
+<% if signed_in? %>
+
+  <div id="topbar-user">
+    <div id="topbar-avatar">
+      <%= avatar_link current_user, :medium %>
+    </div>
+    <div id="topbar-sign-out">
+      <%= link_to current_user.nickname, show_followings_user_path(current_user) %><br />
+      <%= link_to t('view.layout._topbar.signout'), signout_path, method: :delete %>
+    </div>
+  </div>
+
+  <div class="wfe-clear"></div>
+
+  <p><%= link_to t('view.layout._topbar.others'), users_path %></p>
+
+  <div><%= link_to t('view.layout._topbar.post'), new_post_path, class: 'button postfix' %></div>
+
+  <%= form_tag root_path, method: :get do %>
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <%= text_field_tag :query, params[:query] %>
+      </div>
+      <div class="small-3 columns">
+        <%= submit_tag t('view.layout._topbar.search'), class: 'button postfix' %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if current_user.admin? %>
+    <p><%= link_to t('view.layout._topbar.nodes'), admin_root_path %></p>
+  <% end %>
+
+<% else %>
+
+  <p class="sign-up-or-sign-in">
+    <%= link_to t('view.layout._topbar.signup'), signup_path %> &nbsp;&nbsp;&nbsp; <%= link_to t('view.layout._topbar.signin'), signin_path %>
+  </p>
+
+<% end %>
+
+<p><%= link_to t('view.layout._topbar.introduction'), introduction_path %></p>

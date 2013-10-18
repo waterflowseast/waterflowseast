@@ -1,0 +1,21 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.show.comments') %></h4>
+<br />
+
+<% if @comments.any? %>
+  <div id="comments">
+    <% @comments.each do |comment| %>
+      <%= render 'users/comment', comment: comment %>
+    <% end %>
+
+    <%= paging @comments %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

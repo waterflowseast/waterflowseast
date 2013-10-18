@@ -1,0 +1,26 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.show.messages') %></h4>
+
+<% if @messages.any? %>
+  <div id="messages">
+    <div class="action">
+      <span><%= link_to t('view.user.show.save_a_month'), destroy_multiple_messages_path(save: 'a_month'), method: :delete, confirm: t('view.user.show.save_a_month_confirm') %></span>
+      <span><%= link_to t('view.user.show.save_a_week'), destroy_multiple_messages_path(save: 'a_week'), method: :delete, confirm: t('view.user.show.save_a_week_confirm') %></span>
+      <span><%= link_to t('view.user.show.save_nothing'), destroy_multiple_messages_path(save: 'nothing'), method: :delete, confirm: t('view.user.show.save_nothing_confirm') %></span>
+    </div>
+
+    <% @messages.each do |message| %>
+      <%= render 'users/message', message: message %>
+    <% end %>
+
+    <%= paging @messages %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

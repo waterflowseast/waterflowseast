@@ -1,0 +1,35 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.change.change_avatar') %></h4>
+
+<%= render 'shared/error_messages', object: @user %>
+<%= form_for @user, url: update_avatar_user_path(@user), html: { class: 'custom' } do |f| %>
+  <fieldset>
+    <div class="row">
+      <div class="large-4 columns">
+        <%= f.file_field :avatar %>
+      </div>
+      <div class="large-4 columns align-center">
+        <p><%= t('view.user.change.avatar_hint') %></p>
+      </div>
+      <div class="large-4 columns align-right">
+        <label for="user_remove_avatar">
+          <%= f.check_box :remove_avatar %> <%= t('view.user.change.remove_avatar') %>
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <%= f.submit t('view.user.change.submit'), class: "button prefix sign-button" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

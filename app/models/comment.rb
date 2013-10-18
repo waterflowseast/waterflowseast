@@ -1,8 +1,9 @@
 class Comment < ActiveRecord::Base
   include Waterflowseast::TokenGenerator
+  include Waterflowseast::IncreaseDecrease
   attr_accessible :commentable, :content
 
-  belongs_to :commentable, polymorphic: true, touch: true
+  belongs_to :commentable, polymorphic: true
   belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
 
@@ -19,15 +20,12 @@ class Comment < ActiveRecord::Base
 
   before_create { generate_token :permalink }
   before_create :generate_floor
+  after_create { original_post.touch :last_commented_at }
 
   default_scope order: 'comments.created_at ASC'
 
   def to_param
     permalink
-  end
-
-  def self.find(id)
-    find_by_permalink(id)
   end
 
   def points_bonus_for_voting_up
@@ -77,48 +75,47 @@ class Comment < ActiveRecord::Base
 
     up_voters.each do |u|
       if u != comment_or_post_user
-        u.increment! :points_count, POINTS_CONFIG['up_voter_compensation']
+        u.increase_reload! :points_count, POINTS_CONFIG['up_voter_compensation']
         u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.comment.message.sub_up_voter_compensation', nickname: comment_or_post_user.nickname, type: type)
       end
-      u.decrement! :up_votes_count
+      u.decrease! :up_votes_count
     end
 
     down_voters.each do |u|
       if u != comment_or_post_user
-        u.increment! :points_count, POINTS_CONFIG['down_voter_compensation']
+        u.increase_reload! :points_count, POINTS_CONFIG['down_voter_compensation']
         u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.comment.message.sub_down_voter_compensation', nickname: comment_or_post_user.nickname, type: type)
       end
-      u.decrement! :down_votes_count
+      u.decrease! :down_votes_count
     end
 
     if user != comment_or_post_user
-      user.increment! :points_count, POINTS_CONFIG['commenter_compensation']
+      user.increase_reload! :points_count, POINTS_CONFIG['commenter_compensation']
       user.receive_message POINTS_CONFIG['commenter_compensation'], user.points_count, I18n.t('controller.comment.message.sub_commenter_compensation', nickname: comment_or_post_user.nickname, type: type)
-      user.decrement! :comments_count
     end
+    user.decrease! :comments_count
   end
 
   def cleared_by(deleter)
     up_voters.each do |u|
-      u.increment! :points_count, POINTS_CONFIG['up_voter_compensation']
+      u.increase_reload! :points_count, POINTS_CONFIG['up_voter_compensation']
       u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.comment.message.up_voter_compensation', nickname: user.nickname)
-      u.decrement! :up_votes_count
+      u.decrease! :up_votes_count
     end
 
     down_voters.each do |u|
-      u.increment! :points_count, POINTS_CONFIG['down_voter_compensation']
+      u.increase_reload! :points_count, POINTS_CONFIG['down_voter_compensation']
       u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.comment.message.down_voter_compensation', nickname: user.nickname)
-      u.decrement! :down_votes_count
+      u.decrease! :down_votes_count
     end
 
     if user == deleter
-      user.increment! :points_count, POINTS_CONFIG['delete_comment']
+      user.increase_reload! :points_count, POINTS_CONFIG['delete_comment']
       user.receive_message POINTS_CONFIG['delete_comment'], user.points_count, I18n.t('controller.comment.message.delete_by_self')
     else
       user.receive_message 0, user.points_count, I18n.t('controller.comment.message.delete_by_admin', admin: deleter.nickname)
     end
-
-    user.decrement! :comments_count
+    user.decrease! :comments_count
   end
 
   private

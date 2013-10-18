@@ -9,4 +9,8 @@ module ApplicationHelper
       "#{title} - #{base_title}"
     end
   end
+
+  def paging(pages)
+    will_paginate pages, class: 'pagination', inner_window: 2, outer_window: 0, renderer: WillPaginate::ActionView::FoundationLinkRenderer
+  end
 end

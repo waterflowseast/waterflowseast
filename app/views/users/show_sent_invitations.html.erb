@@ -1,0 +1,49 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.show.invite_friends') %></h4>
+
+<%= render 'shared/error_messages', object: @invitation %>
+<%= form_for @invitation do |f| %>
+  <fieldset>
+    <div class="row collapse">
+      <div class="small-2 columns">
+        <span class="prefix"><%= t('view.user.show.email') %></span>
+      </div>
+      <div class="small-10 columns">
+        <%= f.email_field :receiver_email, placeholder: t('view.user.show.placeholder') %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <%= f.submit t('view.user.show.invite'), class: 'button prefix sign-button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<br />
+<h4><%= t('view.user.show.sent_invitations') %></h4>
+
+<% if @sent_invitations.any? %>
+  <table id="invitations">
+    <tbody>
+      <% @sent_invitations.each do |sent_invitation| %>
+        <tr>
+          <td width="30%"><%= sent_invitation.created_at.strftime('%Y-%m-%d') %></td>
+          <td width='40%' class="align-center"><%= sent_invitation.receiver_email %></td>
+          <td width="30%" class="align-right"><%= invitation_receiver_display(sent_invitation) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paging @sent_invitations %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

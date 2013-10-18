@@ -1,0 +1,30 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.change.change_words') %></h4>
+
+<%= render 'shared/error_messages', object: @user %>
+<%= form_for @user, url: update_words_user_path(@user) do |f| %>
+  <fieldset>
+    <div class="row collapse">
+      <div class="small-2 columns">
+        <span class="prefix"><%= t('view.user.change.words') %></span>
+      </div>
+      <div class="small-10 columns">
+        <%= f.text_field :words %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <%= f.submit t('view.user.change.submit'), class: "button prefix sign-button" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

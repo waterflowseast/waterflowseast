@@ -1,0 +1,19 @@
+<% if signed_in? %>
+  <div id="markdown-grammar" class="reveal-modal">
+    <h1><%= t('view.shared._grammar.title') %></h1>
+
+    <table>
+      <tbody>
+        <% %w(headers paragraphs line_breaks horizontal_rule emphasis lists code tables blockquotes links images videos).each do |grammar| %>
+          <tr>
+            <td width="10%"><%= grammar.titlecase %></td>
+            <td width="40%"><pre><%= MarkdownGrammar.public_send(grammar) %></pre></td>
+            <td width="50%"><%= raw_render MarkdownGrammar.public_send(grammar) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+<% end %>

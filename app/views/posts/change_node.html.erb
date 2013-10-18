@@ -1,0 +1,32 @@
+<% provide :title, t('view.post.change.title_node') %>
+
+<%= render 'posts/post_info', post: @post %>
+<hr />
+
+<h4><%= t('view.post.change.title_node') %></h4>
+
+<%= render 'shared/error_messages', object: @post %>
+<%= form_for @post, url: update_node_post_path(@post) do |f| %>
+  <fieldset>
+    <div class="row collapse">
+      <div class="small-2 columns">
+        <span class="prefix"><%= t('view.post.new.node') %></span>
+      </div>
+      <div class="small-10 columns">
+        <%= f.grouped_collection_select :node_id, NodeGroup.includes(:nodes), :nodes, :name, :id, :name, {}, class: 'chosen-select' %>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+      <div class="small-12 columns">
+        <%= f.submit t('view.post.change.submit'), class: "button prefix sign-button" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/post', post: @post %>
+<% end %>

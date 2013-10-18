@@ -1,6 +1,18 @@
 table {
   border-collapse: collapse;
   width: 100%;
+
+  th[align=left] {
+    text-align: left;
+  }
+
+  th[align=center] {
+    text-align: center;
+  }
+
+  th[align=right] {
+    text-align: right;
+  }
 }
 
 .sign-button {
@@ -31,4 +43,20 @@ textarea {
   padding: 5px 30px;
   line-height: 18px;
   text-align: center;
+}
+
+div.alert-box {
+  display: none;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-right {
+  text-align: right;
 }

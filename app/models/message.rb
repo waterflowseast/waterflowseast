@@ -6,4 +6,8 @@ class Message < ActiveRecord::Base
   validates :content, presence: true
   
   default_scope order: 'messages.created_at DESC'
+
+  def changed_points_display
+    (changed_points > 0) ? "+#{changed_points}" : "#{changed_points}"
+  end
 end

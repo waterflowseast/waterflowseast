@@ -1,2 +1,0 @@
-module FollowingRelationshipsHelper
-end

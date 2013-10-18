@@ -1,0 +1,79 @@
+<h4><%= t('view.sidebar._user.details') %></h4>
+
+<table>
+  <tbody>
+    <tr>
+      <td width="1000"><%= t('view.sidebar._user.followings') %></td>
+      <td width="10" class="align-center"><%= link_to user.followings_count, show_followings_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.followeds') %></td>
+      <td class="align-center"><%= link_to user.followeds_count, show_followeds_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.great_posts') %></td>
+      <td class="align-center"><%= link_to user.great_posts_count, show_great_posts_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.posts') %></td>
+      <td class="align-center"><%= link_to user.posts_count, show_posts_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.collections') %></td>
+      <td class="align-center"><%= link_to user.collections_count, show_collections_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.comments') %></td>
+      <td class="align-center"><%= link_to user.comments_count, show_comments_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.up_votes') %></td>
+      <td class="align-center"><%= link_to user.up_votes_count, show_up_votes_user_path(user) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._user.down_votes') %></td>
+      <td class="align-center"><%= link_to user.down_votes_count, show_down_votes_user_path(user) %></td>
+    </tr>
+
+    <% if current_user == user %>
+      <tr>
+        <td><%= t('view.sidebar._user.received_secrets') %></td>
+        <td class="align-center"><%= link_to user.received_secrets_count, show_received_secrets_user_path(user) %></td>
+      </tr>
+      <tr>
+        <td><%= t('view.sidebar._user.sent_secrets') %></td>
+        <td class="align-center"><%= link_to user.sent_secrets_count, show_sent_secrets_user_path(user) %></td>
+      </tr>
+      <tr>
+        <td><%= t('view.sidebar._user.messages') %></td>
+        <td class="align-center"><%= link_to user.messages_count, show_messages_user_path(user) %></td>
+      </tr>
+      <tr>
+        <td><%= t('view.sidebar._user.sent_invitations') %></td>
+        <td class="align-center"><%= link_to user.sent_invitations_count, show_sent_invitations_user_path(user) %></td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td><%= t('view.sidebar._user.points') %></td>
+      <td class="align-center"><%= user.points_count %></td>
+    </tr>
+  </tbody>
+</table>
+
+<% if current_user == user %>
+  <h4><%= t('view.sidebar._user.actions') %></h4>
+
+  <dl class="sub-nav wfe-sub-nav">
+    <dd><%= link_to t('view.sidebar._user.change_words'), change_words_user_path(user) %></dd>
+    <dd><%= link_to t('view.sidebar._user.change_avatar'), change_avatar_user_path(user) %></dd>
+    <dd><%= link_to t('view.sidebar._user.change_password'), change_password_user_path(user) %></dd>
+    <dd><%= link_to t('view.sidebar._user.destroy'), user_path(user), method: :delete, confirm: t('view.sidebar._user.owner_confirm') %></dd>
+  </dl>
+<% elsif current_user.admin? %>
+  <h4><%= t('view.sidebar._user.actions') %></h4>
+
+  <dl class="sub-nav wfe-sub-nav">
+    <dd><%= link_to t('view.sidebar._user.destroy'), user_path(user), method: :delete, confirm: t('view.sidebar._user.admin_confirm') %></dd>
+  </dl>
+<% end %>

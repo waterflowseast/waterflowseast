@@ -1,0 +1,40 @@
+<%= div_for user do %>
+  <div class="avatar">
+    <%= avatar_link user, :small %>
+  </div>
+
+  <div class="main">
+    <table>
+      <tbody>
+        <tr>
+          <td rowspan="2" width="21%"><%= user.nickname %></td>
+          <td width="28%"><%= t('view.user._user.signup') %> &nbsp; <%= user.signed_up_confirmed_at.strftime('%Y-%m-%d') %></td>
+          <td width="18%"><%= t('view.user._user.following') %> &nbsp; <%= user.followings_count %></td>
+          <td width="15%"><%= t('view.user._user.posts') %> &nbsp; <%= user.great_posts_count %> / <%= user.posts_count %></td>
+          <td width="18%" class="align-right">
+            <% if signed_in? and (user != current_user) %>
+              <%= follow_unfollow_url(user) %>
+            <% else %>
+              <%= '-' %>
+            <% end %>
+          </td>
+        </tr>
+
+        <tr>
+          <td><%= t('view.user._user.signin_lately') %> &nbsp; <%= user.last_signed_in_at.strftime('%Y-%m-%d') %></td>
+          <td><%= t('view.user._user.followed') %> &nbsp; <%= user.followeds_count %></td>
+          <td><%= t('view.user._user.points') %> &nbsp; <%= user.points_count %></td>
+          <td class="align-right">
+            <% if signed_in? and (user != current_user) %>
+              <%= link_to t('view.user._user.send_secret'), new_secret_path(receiver: user.permalink) %>
+            <% else %>
+              <%= '-' %>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="wfe-clear"></div>
+  </div>
+<% end %>

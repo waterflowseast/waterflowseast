@@ -2,15 +2,13 @@ class SecretsController < ApplicationController
   before_filter :authenticate_user!
 
   before_filter :find_receiver_via_permalink, only: :new
-
   before_filter :find_receiver_via_id, only: :create
-  before_filter :authorize_create!, only: :create
+  before_filter :authorize_create!, only: [:new, :create]
 
   before_filter :find_secret, only: :destroy
   before_filter :authorize_destroy!, only: :destroy
 
   def new
-    @secret = current_user.secrets.build receiver_id: @receiver.id
   end
 
   def create
@@ -45,7 +43,9 @@ class SecretsController < ApplicationController
   end
 
   def authorize_create!
-    @secret = current_user.secrets.build params[:secret].permit(:receiver_id, :content)
+    content = params[:secret].respond_to?(:[]) ? params[:secret][:content] : nil
+    @secret = current_user.sent_secrets.build receiver_id: @receiver.id, content: content
+
     ability_result = can? :create, @secret, false
     redirect_to show_sent_secrets_user_path(current_user), alert: ability_result.description unless ability_result.result
   end

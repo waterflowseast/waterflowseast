@@ -35,3 +35,7 @@ Waterflowseast::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 end
+
+Tire.configure do
+  logger STDERR, level: 'debug'
+end

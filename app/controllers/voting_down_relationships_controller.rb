@@ -12,9 +12,12 @@ class VotingDownRelationshipsController < ApplicationController
   private
   
   def find_votable
-    redirect_to show_down_votes_user_path(current_user), alert: I18n.t('controller.voting_down_relationship.wrong_class', klass: params[:votable_type]) unless params[:votable_type].in? ['Post', 'Comment']
-    @votable = params[:votable_type].constantize.find_by_id params[:votable_id]
-    redirect_to show_down_votes_user_path(current_user), alert: I18n.t('controller.voting_down_relationship.votable_not_exist') if @votable.nil?
+    if params[:votable_type].in? ['Post', 'Comment']
+      @votable = params[:votable_type].constantize.find_by_id params[:votable_id]
+      redirect_to show_down_votes_user_path(current_user), alert: I18n.t('controller.voting_down_relationship.votable_not_exist') if @votable.nil?
+    else
+      redirect_to show_down_votes_user_path(current_user), alert: I18n.t('controller.voting_down_relationship.wrong_class', klass: params[:votable_type])
+    end
   end
 
   def authorize_create!

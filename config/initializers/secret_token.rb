@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-Waterflowseast::Application.config.secret_token = '047fbc7fc4a20dba43bae74677eb1b900495eef58b5ee8e4f6619c31f3922fa34d9c05441f2cc184dcd70b846e15ec8f7d917c6bf3e5dcd12ee2e05a074a1b78'
+Waterflowseast::Application.config.secret_token = '8f21348cda68b32e5fc0e7696c4d28bf02452e4769fb9b1e10a6153b9b2aa50fed65f734e0c0401520aadbc11da3efe0af1bf8fc08bd261626e024a68ae74b21'

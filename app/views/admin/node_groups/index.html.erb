@@ -1,0 +1,21 @@
+<% provide :title, t('view.admin.node_group.index.manage') %>
+
+<h4><%= t('view.admin.node_group.index.nodes') %></h4>
+
+<% @node_groups.each do |node_group| %>
+  <dl class="sub-nav wfe-sub-nav">
+    <dd><%= link_to node_group.name, edit_admin_node_group_path(node_group) %></dd>
+  </dl>
+
+  <% if node_group.nodes.any? %>
+    <dl class="sub-nav">
+      <% node_group.nodes.each do |node| %>
+        <dd><%= link_to node.name, edit_admin_node_path(node) %></dd>
+      <% end %>
+    </dl>
+  <% end %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/admin' %>
+<% end %>

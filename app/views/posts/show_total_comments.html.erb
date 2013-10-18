@@ -1,0 +1,20 @@
+<% provide :title, @post.title %>
+
+<%= render 'posts/post_info', post: @post %>
+<hr />
+
+<h4><%= t('view.post.show.total_comments') %></h4>
+<br />
+
+<div id="comments">
+  <% if @total_comments.any? %>
+    <%= nested_comments(@total_comments) %>
+    <%= paging @total_comments %>
+  <% end %>
+</div>
+
+<%= render 'shared/grammar' %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/post', post: @post %>
+<% end %>

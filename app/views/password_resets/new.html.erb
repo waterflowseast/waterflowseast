@@ -1,0 +1,22 @@
+<% provide :title, t('view.password_reset.new.title') %>
+
+<h4><%= t('view.password_reset.new.title') %></h4>
+
+<%= form_tag password_resets_path do %>
+  <fieldset>
+    <div class="row collapse">
+      <div class="small-2 columns">
+        <span class="prefix"><%= t('view.password_reset.new.email') %></span>
+      </div>
+      <div class="small-10 columns">
+        <%= email_field_tag :email, params[:email] %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <%= submit_tag t('view.password_reset.new.reset'), class: 'button postfix sign-button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

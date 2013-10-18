@@ -1,0 +1,51 @@
+<%= div_for post do %>
+  <div class="avatar">
+    <%= avatar_link post.user, :small %>
+  </div>
+
+  <div class="main no-border-bottom">
+    <div class="headline">
+      <span><%= post.user.nickname %></span>
+      <span><%= post.created_at.strftime('%Y-%m-%d') %></span>
+      <span><%= image_tag('collect.png', size: '13x13', class: 'wfe-image-collect') %> <%= post.collectors_count %></span>
+      <span><%= image_tag('up.png', size: '13x13', class: 'wfe-image-up') %> <%= post.up_voters_count %></span>
+      <span><%= image_tag('down.png', size: '13x13', class: 'wfe-image-down') %> <%= post.down_voters_count %></span>
+      <span><%= image_tag('reply.png', size: '13x13', class: 'wfe-image-reply') %> <%= post.direct_comments_count %> / <%= post.total_comments_count %></span>
+    </div>
+
+    <div class="content action">
+      <% node_was = post.node || Node.find_by_id(post.node_id_was) %>
+      <span class="post-info-span"><%= t('view.post._post_info.current_node') %> <%= link_to node_was.node_group.name, root_path(node_group: node_was.node_group.permalink) %> / <%= link_to node_was.name, root_path(node: node_was.permalink) %></span>
+      <span><%= t('view.post._post_info.views_count') %> <%= post.views_count %></span>
+    </div>
+
+    <div class="wfe-clear"></div>
+  </div>
+<% end %>
+
+<div class="post-wrapper">
+  <h1 class="post-title"><%= post.title %></h1>
+  <%= raw_render(post.content) %>
+
+  <% if post.extra_info %>
+    <h2 class="post-title"><%= t('view.post._post_info.extra_info') %></h2>
+    <%= raw_render(post.extra_info) %>
+  <% end %>
+
+  <% if signed_in? %>
+    <div class="action">
+      <% if post.user != current_user %>
+        <span><%= collect_uncollect_url(post) %></span>
+
+        <% if ! current_user.has_voted?(post) %>
+          <span><%= link_to t('view.post._post_info.vote_up'), voting_up_relationships_path(votable_type: 'Post', votable_id: post.id), method: :post %></span>
+          <span><%= link_to t('view.post._post_info.vote_down'), voting_down_relationships_path(votable_type: 'Post', votable_id: post.id), method: :post %></span>
+        <% end %>
+      <% end %>
+
+      <% if controller.action_name.in? ['show_direct_comments', 'show_total_comments'] %>
+        <span><%= link_to t('view.post._post_info.comment'), new_comment_path(commentable_type: 'Post', commentable_id: post.id), remote: true %></span>
+      <% end %>
+    </div>
+  <% end %>
+</div>

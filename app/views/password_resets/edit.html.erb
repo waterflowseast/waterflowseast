@@ -1,0 +1,37 @@
+<% provide :title, t('view.password_reset.edit.title') %>
+
+<h4><%= t('view.password_reset.edit.title') %></h4>
+
+<%= render 'shared/error_messages', object: @user %>
+<%= form_for @user, url: password_reset_path(@user.reset_token) do |f| %>
+  <fieldset>
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.password_reset.edit.password') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.password_field :password %>
+          </div>
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.password_reset.edit.password_confirmation') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.password_field :password_confirmation %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <%= f.submit t('view.password_reset.edit.reset'), class: 'button postfix sign-button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

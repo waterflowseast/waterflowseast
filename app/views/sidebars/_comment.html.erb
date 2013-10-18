@@ -1,0 +1,29 @@
+<h4><%= t('view.sidebar._comment.details') %></h4>
+
+<table>
+  <tbody>
+    <tr>
+      <td width="1000"><%= t('view.sidebar._comment.total_comments') %></td>
+      <td width="10" class="align-center"><%= link_to comment.total_comments_count, show_total_comments_comment_path(comment) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._comment.up_voters') %></td>
+      <td class="align-center"><%= link_to comment.up_voters_count, show_up_voters_comment_path(comment) %></td>
+    </tr>
+    <tr>
+      <td><%= t('view.sidebar._comment.down_voters') %></td>
+      <td class="align-center"><%= link_to comment.down_voters_count, show_down_voters_comment_path(comment) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<% if signed_in? and admin_or_owner?(comment) %>
+
+  <h4><%= t('view.sidebar._comment.actions') %></h4>
+
+  <dl class="sub-nav wfe-sub-nav">
+    <dd><%= link_to t('view.sidebar._comment.edit'), edit_comment_path(comment) %></dd>
+    <dd><%= link_to t('view.sidebar._comment.destroy'), comment_path(comment), method: :delete, confirm: t('view.sidebar._comment.confirm') %></dd>
+  </dl>
+
+<% end %>

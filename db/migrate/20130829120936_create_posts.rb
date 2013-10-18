@@ -15,16 +15,13 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :collectors_count, default: 0, null: false
       t.integer :up_voters_count, default: 0, null: false
       t.integer :down_voters_count, default: 0, null: false
+      t.datetime :last_commented_at, null: false
 
       t.timestamps
     end
 
-    add_index :posts, :updated_at
-    add_index :posts, [:updated_at, :user_id]
-    add_index :posts, [:updated_at, :node_id]
-    add_index :posts, [:updated_at, :total_comments_count]
-    add_index :posts, [:updated_at, :collectors_count]
-    add_index :posts, [:updated_at, :up_voters_count]
+    add_index :posts, [:created_at, :user_id]
+    add_index :posts, [:last_commented_at, :user_id]
     add_index :posts, :permalink, unique: true
   end
 end

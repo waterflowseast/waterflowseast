@@ -1,0 +1,26 @@
+table#invitations {
+  width: 100%;
+  background: $wfe-body-bg-color;
+  margin-left: 4px;
+  border: none;
+
+  tr {
+    th, td {
+      color: $wfe-sidebar-font-color;
+      font-size: 14px;
+      padding: emCalc(6px) emCalc(9px) emCalc(6px) 0;
+
+      &.align-center {
+        text-align: center;
+      }
+
+      &.align-right {
+        text-align: right;
+      }
+    }
+
+    &.even, &.alt, &:nth-of-type(even) { 
+      background: $wfe-body-bg-color;
+    }
+  }
+}

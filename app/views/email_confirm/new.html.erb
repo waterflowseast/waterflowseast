@@ -1,0 +1,38 @@
+<% provide :title, t('view.email_confirm.new.title') %>
+
+<h4><%= t('view.email_confirm.new.title') %></h4>
+
+<%= form_tag '/email_confirm', method: :post do %>
+  <fieldset>
+    <%= hidden_field_tag :confirm_token, @user.confirm_token %>
+
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.email_confirm.new.nickname') %></span>
+          </div>
+          <div class="small-9 columns">
+            <input type="text" placeholder="<%= @user.nickname %>" readonly>
+          </div>
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.email_confirm.new.email') %></span>
+          </div>
+          <div class="small-9 columns">
+            <input type="text" placeholder="<%= @user.email %>" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <%= submit_tag t('view.email_confirm.new.confirm'), class: 'button postfix sign-button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

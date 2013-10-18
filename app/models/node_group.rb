@@ -17,10 +17,6 @@ class NodeGroup < ActiveRecord::Base
     permalink
   end
 
-  def self.find(id)
-    find_by_permalink(id)
-  end
-
   def self.technicals
     @technicals ||= where name: EXTRA_CONFIG['technicals']
   end

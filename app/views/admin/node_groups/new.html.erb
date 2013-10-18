@@ -1,0 +1,41 @@
+<% provide :title, t('view.admin.node_group.new.title') %>
+
+<h4><%= t('view.admin.node_group.new.title') %></h4>
+
+<%= render 'shared/error_messages', object: @node_group %>
+<%= form_for [:admin, @node_group] do |f| %>
+  <fieldset>
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.admin.node_group.new.name') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :name %>
+          </div>
+        </div>
+      </div>
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-3 columns">
+            <span class="prefix"><%= t('view.admin.node_group.new.position') %></span>
+          </div>
+          <div class="small-9 columns">
+            <%= f.text_field :position_text %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <%= f.submit t('view.admin.node_group.new.submit'), class: 'button postfix sign-button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/admin' %>
+<% end %>

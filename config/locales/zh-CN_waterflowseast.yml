@@ -21,19 +21,59 @@ zh-CN:
 
 
 
+  # Carrierwave
+  #----------------------------------------------------------------------------
+  errors:
+    messages:
+      carrierwave_processing_error: "无法处理图像"
+      carrierwave_integrity_error: "文件格式不为图像"
+      carrierwave_download_error: "无法下载图像"
+      extension_white_list_error: "无法上传 %{extension} 格式的文件，允许上传的文件格式为： %{allowed_types}"
+      extension_black_list_error: "无法上传 %{extension} 格式的文件，下列格式的文件无法上传： %{prohibited_types}"
+
+
+
   # ActiveRecord
   #----------------------------------------------------------------------------
   activerecord:
     attributes:
+      node_group:
+        name: '名称'
+        position: '位置'
+      node:
+        name: '名称'
+        position: '位置'
+        node_group_id: '节点组'
       user:
         invitation_id: ''
+        nickname: '昵称'
+        email: '邮箱'
+        password_digest: '密码'
+        password: '密码'
+        password_confirmation: '确认密码'
+        words: '语录'
+        avatar: '头像'
+      post:
+        node_id: '节点'
+        title: '标题'
+        content: '内容'
+        extra_info: '附言'
+      comment:
+        content: '内容'
+      secret:
+        sender_id: '发送方'
+        receiver_id: '接收方'
+        content: '内容'
+      invitation:
+        receiver_email: '邮箱'
+
     errors:
       models:
         user:
           attributes:
             invitation_id:
               blank: '必须拥有别人的邀请才能进行注册'
-              not_same: "别人邀请你时所填写的邮箱（ %{receiver_email} ）与你现在所填写的邮箱不一致"
+              not_same: "别人邀请你时所填写的邮箱（%{receiver_email}）与你现在所填写的邮箱不一致"
               signed_up: "你已经是站内用户了，邮箱帐号：%{receiver_email}"
 
 
@@ -96,8 +136,8 @@ zh-CN:
 
     invitation:
       short_of_points: "积分不足，发送邀请所需积分：%{count}"
-      has_been_invited: '你所邀请的人（邮箱：%{email}），已经被别人邀请过了'
-      has_been_signed_up: '你所邀请的人（邮箱：%{email}），已经是站内用户了'
+      has_been_invited: '你想要邀请的人（邮箱：%{email}），已经被别人邀请过了'
+      has_been_signed_up: '你想要邀请的人（邮箱：%{email}），已经是站内用户了'
 
 
 
@@ -108,45 +148,45 @@ zh-CN:
       application:
         admin_only: '只有管理员才有权限访问这些页面'
       node_group:
-        just_created: "你成功创建了 %{node_group} 节点组"
+        just_created: "你成功创建了《%{node_group}》节点组"
         not_exist: '你所要修改的节点组不存在'
         just_updated: '节点组已更新'
       node:
-        just_created: "你在 %{node_group} 节点组下成功创建了 %{node} 节点"
+        just_created: "你在《%{node_group}》节点组下成功创建了《%{node}》节点"
         not_exist: '你所要修改的节点不存在'
         just_updated: '节点已更新'
 
     post:
       not_exist: '你所要查看或修改的帖子不存在'
-      just_created: '你已经成功发表了帖子'
-      update_node: '你已经成功修改了帖子所在的节点'
-      update_title: '你已经成功修改了帖子的标题'
-      update_content: '你已经成功修改了帖子的内容'
-      update_extra_info: '你已经成功修改了帖子的附言'
-      just_destroyed: '你已经成功删除了帖子'
+      just_created: '你成功发表了帖子'
+      update_node: '你成功修改了帖子所在的节点'
+      update_title: '你成功修改了帖子的标题'
+      update_content: '你成功修改了帖子的内容'
+      update_extra_info: '你成功修改了帖子的附言'
+      just_destroyed: '你成功删除了帖子'
       message:
-        points_subtraction: "你在节点组 %{node_group} 之下的节点 %{node} 发表了帖子"
-        to_followeds: "%{nickname} 在节点组 %{node_group} 之下的节点 %{node} 发表了帖子"
+        points_subtraction: "你在节点组《%{node_group}》之下的节点《%{node}》发表了帖子"
+        to_followeds: "%{nickname} 在节点组《%{node_group}》之下的节点《%{node}》发表了帖子"
         up_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
         down_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
         collector_compensation: "%{nickname} 的帖子被删除，系统自动删除所有收藏，你对其进行过收藏，为表示歉意，系统已经对你进行积分补偿"
-        delete_by_self: "你删除了帖子：《 %{title} 》"
-        delete_by_admin: "管理员 %{admin} 删除了你的帖子：《 %{title} 》"
+        delete_by_self: "你删除了帖子：《%{title}》"
+        delete_by_admin: "管理员 %{admin} 删除了你的帖子：《%{title}》"
 
     comment:
-      wrong_class: "无法对 %{klass} 的实例进行回复"
+      wrong_class: "无法对《%{klass}》的实例进行回复"
       commentable_not_exist: "你所要回复的帖子或回复不存在"
       is_comment: '回复'
       is_post: '帖子'
-      just_created: "你已经成功回复了 %{nickname} 的 %{type}"
+      just_created: "你成功回复了 %{nickname} 的%{type}"
       not_exist: '你所要查看或修改的回复不存在'
-      just_updated: '你已经成功修改了回复”'
-      just_destroyed: '你已经成功删除了回复'
+      just_updated: '你成功修改了回复'
+      just_destroyed: '你成功删除了回复'
       message:
-        points_subtraction: "你回复了 %{nickname} 的 %{type}"
-        sub_up_voter_compensation: "%{nickname} 的 %{type} 被删除，系统自动删除所有子回复及所有赞同，你曾经赞同过某一子回复，为表示歉意，系统已经对你进行积分补偿"
-        sub_down_voter_compensation: "%{nickname} 的 %{type} 被删除，系统自动删除所有子回复及所有反对，你曾经反对过某一子回复，为表示歉意，系统已经对你进行积分补偿"
-        sub_commenter_compensation: "%{nickname} 的 %{type} 被删除，系统自动删除所有子回复，你曾经有过回复，为表示歉意，系统已经对你进行积分补偿"
+        points_subtraction: "你回复了 %{nickname} 的%{type}"
+        sub_up_voter_compensation: "%{nickname} 的%{type}被删除，系统自动删除所有子回复及所有赞同，你曾经赞同过某一子回复，为表示歉意，系统已经对你进行积分补偿"
+        sub_down_voter_compensation: "%{nickname} 的%{type}被删除，系统自动删除所有子回复及所有反对，你曾经反对过某一子回复，为表示歉意，系统已经对你进行积分补偿"
+        sub_commenter_compensation: "%{nickname} 的%{type}被删除，系统自动删除所有子回复，你曾经有过回复，为表示歉意，系统已经对你进行积分补偿"
         up_voter_compensation: "%{nickname} 的回复被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
         down_voter_compensation: "%{nickname} 的回复被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
         delete_by_self: "你删除了回复"
@@ -154,17 +194,17 @@ zh-CN:
 
     user:
       not_exist: '你所要查看或修改的用户不存在'
-      confirm_now: "邮箱帐号 %{email} 注册成功，请登录邮箱进行验证，%{time_limit} 小时内有效，超出时间未验证，帐号将被系统删除"
-      update_words: '你已经成功修改了语录'
-      update_avatar: '你已经成功修改了头像'
-      update_password: '你已经成功修改了密码'
-      just_destroyed: "帐号 %{nickname} 已经被删除"
+      confirm_now: "邮箱帐号 %{email} 注册成功，请登录邮箱进行验证，%{time_limit}小时内有效，超出时间未验证，帐号将被系统删除"
+      update_words: '你成功修改了语录'
+      update_avatar: '你成功修改了头像'
+      update_password: '你成功修改了密码'
+      just_destroyed: "帐号 %{nickname} 已被删除"
 
     following_relationship:
       user_not_exist: '你所要关注的用户不存在'
-      just_followed: "你已经成功关注 %{nickname}"
+      just_followed: "你成功关注了 %{nickname}"
       record_not_exist: '无法取消关注，该项记录不存在'
-      just_unfollowed: "你已经对 %{nickname} 取消了关注"
+      just_unfollowed: "你对 %{nickname} 取消了关注"
       message:
         points_subtraction: "你关注了 %{nickname}"
         points_addition: "%{nickname} 关注了你"
@@ -172,31 +212,31 @@ zh-CN:
 
     collecting_relationship:
       post_not_exist: '你所要收藏的帖子不存在'
-      just_collected: "你已经成功收藏了 %{nickname} 的帖子"
+      just_collected: "你成功收藏了 %{nickname} 的帖子"
       record_not_exist: '无法取消收藏，该项记录不存在'
-      just_uncollected: "你已经对 %{nickname} 的帖子取消了收藏"
+      just_uncollected: "你对 %{nickname} 的帖子取消了收藏"
       message:
         points_subtraction: "你收藏了 %{nickname} 的帖子"
         points_addition: "%{nickname} 收藏了你的帖子"
         to_followeds: "%{name_a} 收藏了 %{name_b} 的帖子"
-        bonus: "你的帖子被收藏 %{count} 次，系统奖励 %{bonus} 积分"
-        inviter_bonus: "你引荐的用户 %{name} 的帖子被收藏 %{count} 次，作为Ta的引荐人，系统将奖励你 %{bonus} 积分"
+        bonus: "你的帖子被收藏%{count}次，系统奖励%{bonus}积分"
+        inviter_bonus: "你引荐的用户 %{name} 的帖子被收藏%{count}次，作为Ta的引荐人，系统将奖励你%{bonus}积分"
 
     voting_up_relationship:
-      wrong_class: "无法对 %{klass} 的实例表示赞同"
+      wrong_class: "无法对《%{klass}》的实例表示赞同"
       votable_not_exist: '你所要赞同的帖子或回复不存在'
-      just_voted_up: "你已经对 %{nickname} 的帖子或回复表示了赞同"
+      just_voted_up: "你对 %{nickname} 的帖子或回复表示了赞同"
       message:
         points_subtraction: "你对 %{nickname} 的帖子或回复表示了赞同"
         points_addition: "%{nickname} 对你的帖子或回复表示了赞同"
         to_followeds: "%{name_a} 对 %{name_b} 的帖子或回复表示了赞同"
-        bonus: "你的帖子或回复被赞同 %{count} 次，系统奖励 %{bonus} 积分"
-        inviter_bonus: "你引荐的用户 %{name} 的帖子或回复被赞同 %{count} 次，作为Ta的引荐人，系统将奖励你 %{bonus} 积分"
+        bonus: "你的帖子或回复被赞同%{count}次，系统奖励%{bonus}积分"
+        inviter_bonus: "你引荐的用户 %{name} 的帖子或回复被赞同%{count}次，作为Ta的引荐人，系统将奖励你%{bonus}积分"
 
     voting_down_relationship:
-      wrong_class: "无法对 %{klass} 的实例表示反对"
+      wrong_class: "无法对《%{klass}》的实例表示反对"
       votable_not_exist: '你所要反对的帖子或回复不存在'
-      just_voted_down: "你已经对 %{nickname} 的帖子或回复表示了反对"
+      just_voted_down: "你对 %{nickname} 的帖子或回复表示了反对"
       message:
         points_subtraction: "你对 %{nickname} 的帖子或回复表示了反对"
         warning: "%{nickname} 对你的帖子或回复表示了反对"
@@ -204,7 +244,7 @@ zh-CN:
 
     secret:
       receiver_not_exist: '你所想要私信的用户不存在'
-      just_sent: "你给 %{nickname} 的私信已经发送成功"
+      just_sent: "你给 %{nickname} 的私信发送成功"
       record_not_exist: '无法删除私信，该项记录不存在'
       sent_secret_destroyed: "成功删除了一封你发送给 %{nickname} 的私信"
       received_secret_destroyed: "成功删除了一封 %{nickname} 发送给你的私信"
@@ -213,20 +253,20 @@ zh-CN:
         points_addition: "%{nickname} 给你发送了私信"
 
     message:
-      a_month: '你已经删除了一个月之外的所有消息'
-      a_week: '你已经删除了一周之外的所有消息'
-      nothing: '你已经删除了所有消息'
+      a_month: '你成功删除了一个月之外的所有消息'
+      a_week: '你成功删除了一周之外的所有消息'
+      nothing: '你成功删除了所有消息'
       all: '系统无法识别你的操作，为你保留了所有消息'
 
     invitation:
-      just_invited: "你已经成功邀请了 %{email}，现在可以通知Ta去接收注册邮件了"
+      just_invited: "你成功邀请了 %{email}，现在可以通知Ta去接收注册邮件了"
       message:
         points_subtraction: "你邀请了 %{email}"
 
     email_confirm:
       user_not_exist: '你所提供的邮箱验证码是无效的，系统找不到与此验证码相关联的用户'
       confirmed: '你要进行验证的邮箱已经被验证过了，不需要多次验证'
-      out_of_time: "邮箱帐号 %{email} 已经失效，因为你没有在 %{time_limit} 小时内进行验证，现在你只能选择其他邮箱进行注册"
+      out_of_time: "邮箱帐号 %{email} 已失效，因为你没有在%{time_limit}小时内进行验证，现在你只能选择其他邮箱进行注册"
       just_confirmed: "邮箱 %{email} 验证成功。欢迎加入本站，希望你能在这里找到答案、学到知识、交到朋友"
       message:
         points_addition: "邮箱 %{email} 验证成功"
@@ -234,16 +274,16 @@ zh-CN:
     password_reset:
       invalid_format: "你所提交的邮箱 %{email} 格式不正确，请输入有效的邮箱"
       not_confirmed: "你所输入的邮箱为 %{email}，但是该邮箱帐号还没有验证，请先进行邮箱验证"
-      reset_now: "邮件已发送至 %{email}，密码重置在 %{time_limit} 分钟内有效，若超时，你可再次填写邮箱进行密码重置"
+      reset_now: "邮件已发送至 %{email}，密码重置在%{time_limit}分钟内有效，若超时，你可再次填写邮箱进行密码重置"
       user_not_exist: '请检查密码重置的链接是否正确或是否已过期，系统无法找到相关的用户'
-      out_of_time: "本次密码重置已经失效，因为你没有在 %{time_limit} 分钟内进行操作，现在你可在本页面重新填写邮箱进行密码重置"
-      just_reset: "密码重置成功，现在你已经登录"
+      out_of_time: "本次密码重置已失效，因为你没有在%{time_limit}分钟内进行操作，现在你可在本页面重新填写邮箱进行密码重置"
+      just_reset: "密码重置成功，现在你已登录"
 
     session:
       not_confirmed: "%{nickname}，你的邮箱帐号（%{email}）还没有验证，请先进行邮箱验证"
       not_match: '帐号和密码不匹配，请检查你的输入是否正确'
-      sign_in: "%{nickname}，你已经成功登录"
-      sign_out: "%{nickname}, 已经成功退出"
+      sign_in: "%{nickname}，你已成功登录"
+      sign_out: "你已成功退出"
       message:
         normal_day_sign_in: '日常登录获得积分'
         first_month_day_sign_in: '月初登录获得积分'
@@ -257,6 +297,7 @@ zh-CN:
       base_title: 'Ruby平台的Web开发'
     session:
       sign_in_first: '登录之后才能查看或进行其他操作，如果还没注册，请先注册帐号'
+      already_signed_in: '你已登录，若想换用其他帐号登录或想另外注册帐号，请先退出'
 
 
 
@@ -267,6 +308,303 @@ zh-CN:
 
   # Views.
   #----------------------------------------------------------------------------
+  view:
+    admin:
+      node_group:
+        index:
+          nodes: '所有节点'
+          manage: '节点管理'
+        new:
+          title: '新建节点组'
+          name: '名称'
+          position: '位置'
+          submit: '新建'
+        edit:
+          title: '编辑节点组'
+          name: '名称'
+          position: '位置'
+          submit: '提交'
+      node:
+        new:
+          title: '新建节点'
+          name: '名称'
+          position: '位置'
+          node_group: '节点组'
+          submit: '新建'
+        edit:
+          title: '编辑节点'
+          name: '名称'
+          position: '位置'
+          node_group: '节点组'
+          submit: '提交'
+
+    ad:
+      _google:
+        title: '谷歌广告'
+
+    comment:
+      _comment:
+        detail: '详情'
+        vote_up: '赞同'
+        vote_down: '反对'
+        comment: '回复'
+      _comment_info:
+        original_post: '原帖'
+        vote_up: '赞同'
+        vote_down: '反对'
+        comment: '回复'
+      show:
+        title: '%{nickname} 的回复'
+        sub_comments: '所有回复'
+        up_voters: '所有赞同'
+        down_voters: '所有反对'
+      new:
+        title: '新建回复'
+        preview: '预览'
+        submit: '回复'
+      edit:
+        title: '修改回复'
+        preview: '预览'
+        submit: '提交'
+
+    email_confirm:
+      new:
+        title: '邮箱确认'
+        nickname: '昵称'
+        email: '邮箱'
+        confirm: '确认'
+
+    layout:
+      _topbar:
+        signup: '注册'
+        signin: '登录'
+        signout: '退出'
+        others: '其他用户'
+        post: '发帖'
+        search: '搜帖'
+        nodes: '节点管理'
+        introduction: '本站介绍'
+
+    password_reset:
+      new:
+        title: '密码重置'
+        email: '邮箱'
+        reset: '重置'
+      edit:
+        title: '密码重置'
+        password: '密码'
+        password_confirmation: '确认密码'
+        reset: '重置'
+
+    post:
+      _post:
+        # TODO
+      _post_info:
+        current_node: '所在节点：'
+        views_count: '浏览次数：'
+        extra_info: '附言'
+        collect: '收藏'
+        uncollect: '取消收藏'
+        vote_up: '赞同'
+        vote_down: '反对'
+        comment: '回复'
+      index:
+        home: '首页'
+      show:
+        direct_comments: '直接回复'
+        total_comments: '所有回复'
+        collectors: '收藏的人'
+        up_voters: '赞同的人'
+        down_voters: '反对的人'
+      new:
+        title: '新建帖子'
+        node: '节点'
+        placeholder: '请选择与帖子最匹配的节点'
+        post_title: '标题'
+        preview: '预览'
+        submit: '发布'
+      change:
+        title_node: '修改节点'
+        title_post_title: '修改标题'
+        title_content: '修改内容'
+        title_extra_info: '修改附言'
+        submit: '提交'
+
+    secret:
+      new:
+        title: '私信'
+        send_secret: '发送私信'
+        preview: '预览'
+        submit: '发送'
+
+    session:
+      new:
+        title: '登录'
+        login: '帐号'
+        placeholder: '昵称 或 邮箱'
+        password: '密码'
+        remember_me: '记住我'
+        forget: '忘记密码'
+        submit: '登录'
+
+    shared:
+      _grammar:
+        hint: '查看 Markdown 语法'
+        title: 'Markdown 语法'
+      _error_messages:
+        title: '错误'
+      _comment_errors:
+        title: '错误'
+
+    sidebar:
+      _admin:
+        nodes: '节点管理'
+        new_node: '增加节点'
+        new_node_group: '增加节点组'
+      _comment:
+        details: '回复详情'
+        total_comments: '总回复次数'
+        up_voters: '赞同人数'
+        down_voters: '反对人数'
+        actions: '回复操作'
+        edit: '修改回复'
+        destroy: '删除回复'
+        confirm: '你确定要删除这条回复吗？'
+      _post:
+        details: '帖子详情'
+        direct_comments: '直接回复次数'
+        total_comments: '总回复次数'
+        collectors: '收藏人数'
+        up_voters: '赞同人数'
+        down_voters: '反对人数'
+        actions: '帖子操作'
+        change_node: '修改节点'
+        change_title: '修改标题'
+        change_content: '修改内容'
+        change_extra_info: '修改附言'
+        destroy: '删除帖子'
+        confirm: '你确定要删除这个帖子吗？'
+      _posts:
+        times: '所有时间'
+        today: '今天'
+        three_days: '三天内'
+        a_week: '一周内'
+        a_month: '一月内'
+        hots: '所有热门'
+        collectors: '高收藏'
+        up_voters: '高赞同'
+        comments: '高回复'
+        views: '高浏览'
+        nodes: '所有节点'
+      _user:
+        details: '用户详情'
+        followings: '关注人数'
+        followeds: '被关注次数'
+        great_posts: '好贴总数'
+        posts: '帖子总数'
+        collections: '收藏次数'
+        comments: '回复次数'
+        up_votes: '赞同次数'
+        down_votes: '反对次数'
+        received_secrets: '收取私信次数'
+        sent_secrets: '发送私信次数'
+        messages: '消息个数'
+        sent_invitations: '已发邀请'
+        points: '剩余积分'
+        actions: '用户操作'
+        change_words: '修改语录'
+        change_avatar: '更换头像'
+        change_password: '修改密码'
+        destroy: '删除帐号'
+        owner_confirm: '所有与你相关的内容都将一并被删除，你确定要删除自己的帐号吗？'
+        admin_confirm: '所有与这个用户相关的内容都将一并被删除，你确定要删除这个用户的帐号吗？（你现在的身份是管理员，请慎重考虑）'
+      _users:
+        sorts: '所有排序'
+        sign_up_early: '最早注册'
+        sign_in_lately: '最近登录'
+        followeds_most: '最被关注'
+        great_posts_most: '最多好帖'
+        posts_most: '最多帖子'
+        points_most: '最多积分'
+        search_users: '查找用户'
+        placeholder: '关键字1  关键字2'
+        search_button: '查找'
+
+    user:
+      _comment:
+        up_level: '原作'
+        detail: '详情'
+      _message:
+        # TODO
+      _sent_secret:
+        destroy: '删除'
+        confirm: '你确定要删除这条私信吗？'
+      _received_secret:
+        destroy: '删除'
+        confirm: '你确定要删除这条私信吗？'
+      _user:
+        signup: '注册'
+        signin_lately: '最近'
+        following: '关注'
+        followed: '被关注'
+        posts: '发帖'
+        points: '积分'
+        follow: '关注'
+        unfollow: '取消关注'
+        send_secret: '私信'
+      _user_info:
+        follow: '关注'
+        unfollow: '取消关注'
+        send_secret: '私信'
+        inviter: '引荐人'
+        signup: '注册'
+        signin_lately: '最近'
+      index:
+        site_users: '站内用户'
+      show:
+        followings: '所关注的人'
+        followeds: '被他们关注'
+        great_posts: '所有好贴'
+        posts: '所有帖子'
+        collections: '所有收藏'
+        comments: '所有回复'
+        up_votes: '所有赞同'
+        down_votes: '所有反对'
+        received_secrets: '收到的私信'
+        sent_secrets: '发出的私信'
+        messages: '所有消息'
+        save_a_month: '只留一个月'
+        save_a_month_confirm: '一个月以外的消息将全部被删除，你确定要进行此项操作吗？'
+        save_a_week: '只留一周'
+        save_a_week_confirm: '一周以外的消息将全部被删除，你确定要进行此项操作吗？'
+        save_nothing: '全部删除'
+        save_nothing_confirm: '所有消息将全部被删除，你确定要进行此项操作吗？'
+        invite_friends: '邀请友人'
+        email: '邮箱'
+        placeholder: '请输入被邀请人的邮箱'
+        invite: '邀请'
+        sent_invitations: '发出的邀请'
+      new:
+        title: '注册'
+        nickname_format: "昵称格式"
+        first_char: '1个首字符：汉字或字母'
+        middle_chars: '1～14个中间字符：汉字、字母、数字、下划线、连词符或小数点'
+        last_char: '1个尾字符：汉字、字母或数字'
+        nickname: '昵称'
+        email: '邮箱'
+        password: '密码'
+        password_confirmation: '确认密码'
+        submit: '注册'
+      change:
+        change_words: '修改语录'
+        change_avatar: '更换头像'
+        change_password: '修改密码'
+        words: '语录'
+        avatar_hint: '左侧更换，右侧删除'
+        remove_avatar: '删除头像'
+        password: '密码'
+        password_confirmation: '确认密码'
+        submit: '提交'
 
 
 

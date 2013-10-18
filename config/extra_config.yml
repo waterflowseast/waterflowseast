@@ -39,11 +39,13 @@ words_max: 21
 nested_level_max: 5
 
 # 点击首页 所有热门 下的 高收藏 时，只显示收藏数大于以下值的帖子
-collectors_limit: 0
+collectors_limit: 5
 # 点击首页 所有热门 下的 高赞同 时，只显示赞同数大于以下值的帖子
-up_voters_limit: 0
+up_voters_limit: 5
 # 点击首页 所有热门 下的 高回复 时，只显示总回复数大于以下值的帖子
-total_comments_limit: 0
+total_comments_limit: 10
+# 点击首页 所有热门 下的 高浏览 时，只显示浏览数大于以下值的帖子
+views_limit: 50
 
 # will_paginate 每页显示的数量
 per_page: 20

@@ -1,0 +1,31 @@
+<%= div_for comment do %>
+  <div class="avatar">
+    <%= avatar_link comment.user, :small %>
+  </div>
+
+  <div class="main">
+    <div class="headline">
+      <span><%= comment.user.nickname %></span>
+      <span><%= comment.created_at.strftime('%Y-%m-%d') %></span>
+      <span><%= image_tag('up.png', size: '13x13', class: 'wfe-image-up') %> <%= comment.up_voters_count %></span>
+      <span><%= image_tag('down.png', size: '13x13', class: 'wfe-image-down') %> <%= comment.down_voters_count %></span>
+      <span><%= image_tag('reply.png', size: '13x13', class: 'wfe-image-reply') %> <%= comment.total_comments_count %></span>
+      <span><%= image_tag('floor.png', size: '13x13', class: 'wfe-image-floor') %> <%= comment.floor %></span>
+    </div>
+
+    <div class="content">
+      <%= raw_render(comment.content) %>
+
+      <% if signed_in? %>
+        <div class="action">
+          <span><%= link_to t('view.comment._comment.detail'), show_total_comments_comment_path(comment) %></span>
+          <span><%= link_to t('view.comment._comment.vote_up'), voting_up_relationships_path(votable_type: 'Comment', votable_id: comment.id), method: :post %></span>
+          <span><%= link_to t('view.comment._comment.vote_down'), voting_down_relationships_path(votable_type: 'Comment', votable_id: comment.id), method: :post %></span>
+          <span><%= link_to t('view.comment._comment.comment'), new_comment_path(commentable_type: 'Comment', commentable_id: comment.id), remote: true %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="wfe-clear"></div>
+  </div>
+<% end %>

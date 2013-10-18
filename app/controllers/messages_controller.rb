@@ -19,7 +19,7 @@ class MessagesController < ApplicationController
 
     current_user.destroy_messages(deleted_ids)
 
-    if defined? notice_message
+    if defined?(notice_message) and notice_message.present?
       redirect_to show_messages_user_path(current_user), notice: notice_message
     else
       redirect_to show_messages_user_path(current_user), alert: alert_message

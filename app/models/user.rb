@@ -1,7 +1,10 @@
 class User < ActiveRecord::Base
   include Waterflowseast::TokenGenerator
-  attr_accessible :nickname, :email, :password, :password_confirmation, :avatar, :words, :invitation_token
+  include Waterflowseast::IncreaseDecrease
+  attr_accessible :nickname, :email, :password, :password_confirmation, :avatar, :remove_avatar, :words, :invitation_token
   has_secure_password
+
+  mount_uploader :avatar, AvatarUploader
 
   has_many :posts
   has_many :comments
@@ -30,12 +33,12 @@ class User < ActiveRecord::Base
   has_many :invitations, foreign_key: :sender_id, dependent: :destroy
   belongs_to :invitation
 
-  validates :nickname, presence: true, format: { with: Waterflowseast::Regex.nickname }, uniqueness: { case_sensitive: false }
-  validates :email, presence: true, format: { with: Waterflowseast::Regex.email }, uniqueness: { case_sensitive: false }
-  validates :password, presence: true, length: { minimum: EXTRA_CONFIG['password_min'], maximum: EXTRA_CONFIG['password_max'] }, if: :password_changed?, if: :new_record?
-  validates :password_confirmation, presence: true, if: :password_changed?, if: :new_record?
+  validates :nickname, format: { with: Waterflowseast::Regex.nickname }, uniqueness: { case_sensitive: false }
+  validates :email, format: { with: Waterflowseast::Regex.email }, uniqueness: { case_sensitive: false }
+  validates :password, length: { minimum: EXTRA_CONFIG['password_min'], maximum: EXTRA_CONFIG['password_max'] }, if: :password_changed?
+  validates :password_confirmation, presence: true, if: :password_changed?
   validates :words, length: { maximum: EXTRA_CONFIG['words_max'] }, if: ->(user) { ! user.words.nil? }
-  validates :invitation_id, presence: true, if: ->(user) { user.new_record? and User.last.id >= EXTRA_CONFIG['sign_in_limit_without_invitation'] }
+  validates :invitation_id, presence: true, if: ->(user) { user.new_record? and ( (User.pluck(:id).max || 0) >= EXTRA_CONFIG['sign_in_limit_without_invitation'] ) }
   validate :invitation_check, if: ->(user) { user.new_record? and ! user.invitation.nil? }
 
   before_create { generate_token :permalink }
@@ -47,8 +50,41 @@ class User < ActiveRecord::Base
     permalink
   end
 
+  # have to redefine this method because Carrierwave uses to_param value as the id, and find method as the way to find object
   def self.find(id)
-    find_by_permalink(id)
+    find_by_permalink id
+  end
+
+  # have to redifine this method because find method has been redefined to use find_by_permalink
+  def reload(options = nil)
+    clear_aggregation_cache
+    clear_association_cache
+
+    fresh_object = 
+      if options && options[:lock]
+        self.class.unscoped { self.class.lock.find_by_id(id) }
+      else
+        self.class.unscoped { self.class.find_by_id(id) }
+      end
+
+    @attributes.update(fresh_object.instance_variable_get('@attributes'))
+    @columns_hash = fresh_object.instance_variable_get('@columns_hash')
+
+    @attributes_cache = {}
+    self
+  end
+
+  def to_key
+    [permalink]
+  end
+
+  def words=(text)
+    write_attribute :words, (text.present? ? text : nil)
+  end
+
+  def self.search(names)
+    wildcard_names = names.split.map {|name| "%#{name}%" }
+    where arel_table[:nickname].matches_any(wildcard_names)
   end
 
   def self.select_sort(sort)
@@ -98,9 +134,12 @@ class User < ActiveRecord::Base
     @password_changed = false
   end
 
+  def inviter
+    invitation.sender if invitation
+  end
+
   # This is basically useless, because the result is an Array of different instances (of Post and Comment), not ActiveRecord::Relation,
-  # so you can't do paginate. This is used only if all you need is all the up_votes and no extra filtering conditions are required.
-  # By the way, if you want to know how to do the paginate, you can read show_up_votes method in app/controllers/users_controller.rb
+  # so you can't do paginate. Only used when all you need is just up_votes and no extra filtering conditions are required.
   def up_votes
     post_up_votes + comment_up_votes
   end
@@ -125,11 +164,11 @@ class User < ActiveRecord::Base
     following_relationships.create! followed_id: other_user.id
 
     # you follow people, your points will be subtracted and system will send you a message
-    increment! :points_count, POINTS_CONFIG['follow']
+    increase_reload! :points_count, POINTS_CONFIG['follow']
     receive_message POINTS_CONFIG['follow'], points_count, I18n.t('controller.following_relationship.message.points_subtraction', nickname: other_user.nickname)
 
     # the one you just followed, his points will be added and system will send him a message
-    other_user.increment! :points_count, POINTS_CONFIG['be_followed']
+    other_user.increase_reload! :points_count, POINTS_CONFIG['be_followed']
     other_user.receive_message POINTS_CONFIG['be_followed'], other_user.points_count, I18n.t('controller.following_relationship.message.points_addition', nickname: nickname)
 
     # those people who followed you will receive a message from the system
@@ -138,14 +177,14 @@ class User < ActiveRecord::Base
     end
 
     # update corresponding count
-    increment! :followings_count
-    other_user.increment! :followeds_count
+    increase! :followings_count
+    other_user.increase! :followeds_count
   end
 
   def unfollow!(other_user)
     following_relationships.find_by_followed_id(other_user.id).destroy
-    decrement! :followings_count
-    other_user.decrement! :followeds_count
+    decrease! :followings_count
+    other_user.decrease! :followeds_count
   end
 
   def has_collected?(post)
@@ -157,11 +196,11 @@ class User < ActiveRecord::Base
     post_user = post.user
 
     # you collect others' posts, your points will be subtracted and system will send you a message
-    increment! :points_count, POINTS_CONFIG['collect']
+    increase_reload! :points_count, POINTS_CONFIG['collect']
     receive_message POINTS_CONFIG['collect'], points_count, I18n.t('controller.collecting_relationship.message.points_subtraction', nickname: post_user.nickname)
 
     # the one whose post you just collected, his points will be added and system will send him a message
-    post_user.increment! :points_count, POINTS_CONFIG['be_collected']
+    post_user.increase_reload! :points_count, POINTS_CONFIG['be_collected']
     post_user.receive_message POINTS_CONFIG['be_collected'], post_user.points_count, I18n.t('controller.collecting_relationship.message.points_addition', nickname: nickname)
 
     # those people who followed you will receive a message from the system
@@ -170,34 +209,36 @@ class User < ActiveRecord::Base
     end
 
     # update corresponding count
-    increment! :collections_count
-    post.increment! :collectors_count
+    increase! :collections_count
+    post.increase_reload! :collectors_count
+    post.tire.update_index
 
     # if this post's collectors amount reaches the limit, system will consider it great post and make it not deletable
     if (post.collectors_count == POINTS_CONFIG['valuable_limit_for_collecting']) and post.can_be_deleted?
       post.toggle! :can_be_deleted
-      post_user.increment! :great_posts_count
+      post_user.increase! :great_posts_count
     end
 
     # if this post's collectors amount hits the bonus limit at its first time, the author of the post and the inviter of the author will get the bonus points and a message from the system
     bonus_points = post.points_bonus_for_collecting
     if bonus_points > post.highest_bonus_points
       post.update_attribute :highest_bonus_points, bonus_points
-      post_user.increment! :points_count, bonus_points
+      post_user.increase_reload! :points_count, bonus_points
       post_user.receive_message bonus_points, post_user.points_count, I18n.t('controller.collecting_relationship.message.bonus', count: post.collectors_count, bonus: bonus_points)
 
-      inviter = post_user.inviter
-      if inviter
-        inviter.increment! :points_count, bonus_points
-        inviter.receive_message bonus_points, inviter.points_count, I18n.t('controller.collecting_relationship.message.inviter_bonus', name: post_user.nickname, count: post.collectors_count, bonus: bonus_points)
+      user_inviter = post_user.inviter
+      if user_inviter
+        user_inviter.increase_reload! :points_count, bonus_points
+        user_inviter.receive_message bonus_points, user_inviter.points_count, I18n.t('controller.collecting_relationship.message.inviter_bonus', name: post_user.nickname, count: post.collectors_count, bonus: bonus_points)
       end
     end
   end
 
   def uncollect!(post)
     collecting_relationships.find_by_post_id(post.id).destroy
-    decrement! :collections_count
-    post.decrement! :collectors_count
+    decrease! :collections_count
+    post.decrease_reload! :collectors_count
+    post.tire.update_index
   end
 
   def has_voted?(votable)
@@ -211,11 +252,11 @@ class User < ActiveRecord::Base
     votable_user = votable.user
 
     # you vote up others' posts or comments, your points will be subtracted and system will send you a message
-    increment! :points_count, POINTS_CONFIG['vote_up']
+    increase_reload! :points_count, POINTS_CONFIG['vote_up']
     receive_message POINTS_CONFIG['vote_up'], points_count, I18n.t('controller.voting_up_relationship.message.points_subtraction', nickname: votable_user.nickname)
 
     # the one whose post or comment you just voted up, his points will be added and system will send him a message
-    votable_user.increment! :points_count, POINTS_CONFIG['be_voted_up']
+    votable_user.increase_reload! :points_count, POINTS_CONFIG['be_voted_up']
     votable_user.receive_message POINTS_CONFIG['be_voted_up'], votable_user.points_count, I18n.t('controller.voting_up_relationship.message.points_addition', nickname: nickname)
 
     # those people who followed you will receive a message from the system
@@ -224,25 +265,26 @@ class User < ActiveRecord::Base
     end
 
     # update corresponding count
-    increment! :up_votes_count
-    votable.increment! :up_voters_count
+    increase! :up_votes_count
+    votable.increase_reload! :up_voters_count
+    votable.tire.update_index if votable.instance_of? Post
 
     # if the votable is a post, and its up-voters ammount reaches the limit, system will consider it great post and make it not deletable
     if (votable.instance_of? Post) and (votable.up_voters_count == POINTS_CONFIG['valuable_limit_for_voting_up']) and votable.can_be_deleted?
       votable.toggle! :can_be_deleted
-      votable_user.increment! :great_posts_count
+      votable_user.increase! :great_posts_count
     end
 
     # if this votable's up-voters ammount hits the bonus limit, the author of the votable and the inviter of the author will get the bonus points and a message from the system
     bonus_points = votable.points_bonus_for_voting_up
     if bonus_points > 0
-      votable_user.increment! :points_count, bonus_points
+      votable_user.increase_reload! :points_count, bonus_points
       votable_user.receive_message bonus_points, votable_user.points_count, I18n.t('controller.voting_up_relationship.message.bonus', count: votable.up_voters_count, bonus: bonus_points)
 
-      inviter = votable_user.inviter
-      if inviter
-        inviter.increment! :points_count, bonus_points
-        inviter.receive_message bonus_points, inviter.points_count, I18n.t('controller.voting_up_relationship.message.inviter_bonus', name: votable_user.nickname, count: votable.up_voters_count, bonus: bonus_points)
+      user_inviter = votable_user.inviter
+      if user_inviter
+        user_inviter.increase_reload! :points_count, bonus_points
+        user_inviter.receive_message bonus_points, user_inviter.points_count, I18n.t('controller.voting_up_relationship.message.inviter_bonus', name: votable_user.nickname, count: votable.up_voters_count, bonus: bonus_points)
       end
     end
   end
@@ -252,7 +294,7 @@ class User < ActiveRecord::Base
     votable_user = votable.user
 
     # you vote down others' posts or comments, your points will be subtracted and system will send you a message
-    increment! :points_count, POINTS_CONFIG['vote_down']
+    increase_reload! :points_count, POINTS_CONFIG['vote_down']
     receive_message POINTS_CONFIG['vote_down'], points_count, I18n.t('controller.voting_down_relationship.message.points_subtraction', nickname: votable_user.nickname)
 
     # the one whose post or comment you just voted down, system will send him a message
@@ -264,8 +306,8 @@ class User < ActiveRecord::Base
     end
 
     # update corresponding count
-    increment! :down_votes_count
-    votable.increment! :down_voters_count
+    increase! :down_votes_count
+    votable.increase! :down_voters_count
   end
 
   def has_secret?(secret)
@@ -281,8 +323,8 @@ class User < ActiveRecord::Base
       changed_points_for_receiver = POINTS_CONFIG['received_secret']
 
       # the receiver didn't follow you, you send him a secret, your points will be subtracted and his points will be added
-      increment! :points_count, changed_points_for_sender
-      receiver.increment! :points_count, changed_points_for_receiver
+      increase_reload! :points_count, changed_points_for_sender
+      receiver.increase_reload! :points_count, changed_points_for_receiver
     end
 
     # system will send message to you and the receiver
@@ -290,12 +332,12 @@ class User < ActiveRecord::Base
     receiver.receive_message changed_points_for_receiver, receiver.points_count, I18n.t('controller.secret.message.points_addition', nickname: nickname)
 
     # update corresponding count
-    increment! :sent_secrets_count
-    receiver.increment! :received_secrets_count
+    increase! :sent_secrets_count
+    receiver.increase! :received_secrets_count
   end
 
   def destroy_sent_secret(secret)
-    decrement! :sent_secrets_count
+    decrease! :sent_secrets_count
 
     if secret.receiver_deleted?
       secret.destroy
@@ -305,7 +347,7 @@ class User < ActiveRecord::Base
   end
 
   def destroy_received_secret(secret)
-    decrement! :received_secrets_count
+    decrease! :received_secrets_count
 
     if secret.sender_deleted?
       secret.destroy
@@ -321,13 +363,13 @@ class User < ActiveRecord::Base
     message.content = content
     message.save
 
-    increment! :messages_count
+    increase! :messages_count
   end
 
   def destroy_messages(deleted_ids)
     if (deleted_size = deleted_ids.size) > 0
       Message.delete deleted_ids
-      decrement! :messages_count, deleted_size
+      decrease! :messages_count, deleted_size
     end
   end
 
@@ -343,10 +385,10 @@ class User < ActiveRecord::Base
     Notifier.send_invitation(sent_invitation).deliver
 
     # you invite people, your points will be subtracted and system will send you a message
-    increment! :points_count, POINTS_CONFIG['invite']
+    increase_reload! :points_count, POINTS_CONFIG['invite']
     receive_message POINTS_CONFIG['invite'], points_count, I18n.t('controller.invitation.message.points_subtraction', email: sent_invitation.receiver_email)
 
-    increment! :sent_invitations_count
+    increase! :sent_invitations_count
   end
 
   def has_created_post(post)
@@ -355,17 +397,17 @@ class User < ActiveRecord::Base
 
     # you create a post, if the post will cost points or gain points, then your points will be changed and system will send you a message
     if changed_points != 0
-      increment! :points_count, changed_points
-      receive_message changed_points, points_count, I18n.t("controller.post.message.points_changed", node_group: node.node_group, node: node)
+      increase_reload! :points_count, changed_points
+      receive_message changed_points, points_count, I18n.t("controller.post.message.points_subtraction", node_group: node.node_group.name, node: node.name)
     end
 
     # those people who followed you will receive a message from the system
     followeds.each do |u|
-      u.receive_message 0, u.points_count, I18n.t('controller.post.message.to_followeds', nickname: nickname, node_group: node.node_group, node: node)
+      u.receive_message 0, u.points_count, I18n.t('controller.post.message.to_followeds', nickname: nickname, node_group: node.node_group.name, node: node.name)
     end
     
     # update corresponding count
-    increment! :posts_count
+    increase! :posts_count
   end
 
   def destroy_post(post)
@@ -380,15 +422,19 @@ class User < ActiveRecord::Base
     type = is_comment ? I18n.t('controller.comment.is_comment') : I18n.t('controller.comment.is_post')
 
     # you create a comment, your points will be subtracted and system will send you a message
-    increment! :points_count, POINTS_CONFIG['comment']
+    increase_reload! :points_count, POINTS_CONFIG['comment']
     receive_message POINTS_CONFIG['comment'], points_count, I18n.t('controller.comment.message.points_subtraction', nickname: comment_or_post.user.nickname, type: type)
 
     # update corresponding count
-    increment! :comments_count
+    increase! :comments_count
+    
+    comment_ancestors = comment.ancestors
+    original_post = comment_ancestors.last
 
     # ancestors of the comment will increase their total_comments_count, and if the commentable of the comment is a post, the post's direct_comments_count will be increased
-    comment.ancestors.each {|c| c.increment! :total_comments_count }
-    comment_or_post.increment! :direct_comments_count unless is_comment
+    comment_ancestors.each {|c| c.increase! :total_comments_count }
+    comment_or_post.increase! :direct_comments_count unless is_comment
+    original_post.reload.tire.update_index
   end
 
   def destroy_comment(comment)
@@ -398,8 +444,12 @@ class User < ActiveRecord::Base
     deleted_sub_comments = comment.sub_comments
     deleted_comments_count = deleted_sub_comments.count + 1
 
-    comment.ancestors.each {|c| c.decrement! :total_comments_count, deleted_comments_count }
-    comment_or_post.decrement! :direct_comments_count unless is_comment
+    comment_ancestors = comment.ancestors
+    original_post = comment_ancestors.last
+
+    comment_ancestors.each {|c| c.decrease! :total_comments_count, deleted_comments_count }
+    comment_or_post.decrease! :direct_comments_count unless is_comment
+    original_post.reload.tire.update_index
 
     deleted_sub_comments.each {|c| c.compensate_from(comment) }
     comment.cleared_by self
@@ -407,14 +457,27 @@ class User < ActiveRecord::Base
   end
 
   def destroy_self
-    followings.each {|u| u.decrement! :followeds_count }
-    followeds.each {|u| u.decrement! :followings_count }
-    collections.each {|p| p.decrement! :collectors_count }
-    up_votes.each {|v| v.decrement! :up_voters_count }
-    down_votes.each {|v| v.decrement! :down_voters_count }
-    sent_secrets.where(receiver_deleted: false).map(&:receiver).each {|u| u.decrement! :received_secrets_count }
-    received_secrets.where(sender_deleted: false).map(&:sender).each {|u| u.decrement! :sent_secrets_count }
-    User.where(invitation_id: invitations.pluck(:id)).update_all invitation_id: nil
+    followings.each {|u| u.decrease! :followeds_count }
+    followeds.each {|u| u.decrease! :followings_count }
+
+    collections.each do |p|
+      p.decrease_reload! :collectors_count
+      p.tire.update_index
+    end
+
+    up_votes.each do |v|
+      if v.instance_of? Post
+        v.decrease_reload! :up_voters_count
+        v.tire.update_index
+      else
+        v.decrease! :up_voters_count
+      end
+    end
+
+    down_votes.each {|v| v.decrease! :down_voters_count }
+    sent_secrets.includes(:receiver).where(receiver_deleted: false).map(&:receiver).each {|u| u.decrease! :received_secrets_count }
+    received_secrets.includes(:sender).where(sender_deleted: false).map(&:sender).each {|u| u.decrease! :sent_secrets_count }
+    User.where(email: invitations.pluck(:receiver_email)).where('users.invitation_id IS NOT NULL').update_all invitation_id: nil
     comments.each {|c| destroy_comment(c) }
     posts.each {|p| destroy_post(p) }
 
@@ -435,11 +498,12 @@ class User < ActiveRecord::Base
   end
 
   def confirm_email
-    touch :signed_up_confirmed_at
-    touch :last_signed_in_at
+    self.signed_up_confirmed_at = Time.zone.now
+    self.last_signed_in_at = Time.zone.now
+    save!
 
     # you confirmed your account, your points will be added and system will send you a message
-    increment! :points_count, POINTS_CONFIG['new_account']
+    increase_reload! :points_count, POINTS_CONFIG['new_account']
     receive_message POINTS_CONFIG['new_account'], points_count, I18n.t('controller.email_confirm.message.points_addition', email: email)
   end
 
@@ -467,11 +531,11 @@ class User < ActiveRecord::Base
 
   def signin
     if can_get_signin_points?
-      increment! :points_count, POINTS_CONFIG['normal_day_sign_in']
+      increase_reload! :points_count, POINTS_CONFIG['normal_day_sign_in']
       receive_message POINTS_CONFIG['normal_day_sign_in'], points_count, I18n.t('controller.session.message.normal_day_sign_in')
 
       if Time.zone.now.mday == 1
-        increment! :points_count, POINTS_CONFIG['first_month_day_sign_in']
+        increase_reload! :points_count, POINTS_CONFIG['first_month_day_sign_in']
         receive_message POINTS_CONFIG['first_month_day_sign_in'], points_count, I18n.t('controller.session.message.first_month_day_sign_in')
       end
     end

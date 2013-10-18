@@ -1,0 +1,13 @@
+if ( $("#<%= dom_id(@commentable) %>").next(".nested-comments").length == 0 ) {
+  var container = $("#comments");
+} else {
+  var container = $("#<%= dom_id(@commentable) %>").next(".nested-comments");
+}
+
+<% if @comment.errors[:base].present? %>
+  container.children("#new_comment").replaceWith("<%= escape_javascript render("shared/comment_errors", object: @comment.errors[:base]) %>");
+<% elsif @comment.errors.present? %>
+  container.children("#new_comment").replaceWith("<%= escape_javascript render("comments/new", comment: @comment) %>");
+<% else %>
+  container.children("#new_comment").replaceWith("<%= escape_javascript direct_comments([@comment]) %>");
+<% end %>

@@ -1,0 +1,21 @@
+<% provide :title, @user.nickname %>
+
+<%= render 'users/user_info', user: @user %>
+<hr />
+
+<h4><%= t('view.user.show.down_votes') %></h4>
+<br />
+
+<% if @down_votes.any? %>
+  <div id="down_votes">
+    <% @down_votes.each do |down_vote| %>
+      <%= render_post_or_comment down_vote %>
+    <% end %>
+
+    <%= paging @voting_down_relationships %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/user', user: @user %>
+<% end %>

@@ -1,5 +1,9 @@
 class Post < ActiveRecord::Base
+  include Tire::Model::Search
+  include Tire::Model::Callbacks
   include Waterflowseast::TokenGenerator
+  include Waterflowseast::IncreaseDecrease
+
   attr_accessible :title, :content, :extra_info, :node_id
 
   belongs_to :user
@@ -20,63 +24,96 @@ class Post < ActiveRecord::Base
   validates :content, presence: true, length: { minimum: EXTRA_CONFIG['post_content_min'] }
   validates :extra_info, length: { minimum: EXTRA_CONFIG['post_extra_info_min'] }, if: ->(post) { ! post.extra_info.nil? }
   validates :user_id, presence: true
-  validates :node_id, presence: true, inclusion: { in: Node.pluck(:id) }
+  validates :node_id, presence: true, inclusion: { in: ->(record) { Node.pluck(:id) } }
 
   before_create { generate_token :permalink }
+  before_create { self.last_commented_at = Time.zone.now }
 
-  default_scope order: 'posts.updated_at DESC'
+  default_scope order: 'posts.last_commented_at DESC'
 
   def to_param
     permalink
   end
 
-  def self.find(id)
-    find_by_permalink(id)
+  def extra_info=(text)
+    write_attribute :extra_info, (text.present? ? text : nil)
   end
 
-  def self.select_time(time)
-    case time
-    when 'today'
-      where('updated_at > ?', Time.zone.now.beginning_of_day).order('posts.updated_at DESC')
-    when 'three_days'
-      where('updated_at > ?', 2.days.ago.beginning_of_day).order('posts.updated_at DESC')
-    when 'a_week'
-      where('updated_at > ?', 6.days.ago.beginning_of_day).order('posts.updated_at DESC')
-    else
-      scoped
-    end
+  tire.mapping do
+    indexes :title, analyzer: 'smartcn', boost: 10
+    indexes :content, analyzer: 'smartcn'
+    indexes :extra_info, analyzer: 'smartcn'
+    indexes :collectors_count, type: 'integer', index: :not_analyzed
+    indexes :up_voters_count, type: 'integer', index: :not_analyzed
+    indexes :total_comments_count, type: 'integer', index: :not_analyzed
+    indexes :views_count, type: 'integer', index: :not_analyzed
+    indexes :last_commented_at, type: 'date'
+    indexes :node_permalink, index: :not_analyzed
+    indexes :node_group_permalink, index: :not_analyzed
   end
 
-  def self.select_hot(hot)
-    case hot
-    when 'collectors'
-      where('collectors_count > ?', EXTRA_CONFIG['collectors_limit']).order('posts.collectors_count DESC')
-    when 'up_voters'
-      where('up_voters_count > ?', EXTRA_CONFIG['up_voters_limit']).order('posts.up_voters_count DESC')
-    when 'comments'
-      where('total_comments_count > ?', EXTRA_CONFIG['total_comments_limit']).order('posts.total_comments_count DESC')
-    else
-      scoped
-    end
+  def node_permalink
+    node.permalink
   end
 
-  def self.select_node_group(node_group)
-    found = NodeGroup.find node_group
-
-    if found
-      where node_id: found.nodes.pluck(:id)
-    else
-      scoped
-    end
+  def node_group_permalink
+    node.node_group.permalink
   end
 
-  def self.select_node(node)
-    found = Node.find node
+  def to_indexed_json
+    to_json(only: [:title, :content, :extra_info, :collectors_count, :up_voters_count, :total_comments_count, :views_count, :last_commented_at],
+            methods: [:node_permalink, :node_group_permalink])
+  end
 
-    if found
-      where node_id: found.id
-    else
-      scoped
+  def self.search(params)
+    tire.search(load: true, page: params[:page], per_page: EXTRA_CONFIG['per_page']) do
+      query { string params[:query], default_operator: "AND" } if params[:query].present?
+
+      sorted_columns = []
+
+      case params[:hot]
+      when 'collectors'
+        filter :numeric_range, collectors_count: { gt: EXTRA_CONFIG['collectors_limit'] }
+        sorted_columns << :collectors_count
+      when 'up_voters'
+        filter :numeric_range, up_voters_count: { gt: EXTRA_CONFIG['up_voters_limit'] }
+        sorted_columns << :up_voters_count
+      when 'comments'
+        filter :numeric_range, total_comments_count: { gt: EXTRA_CONFIG['total_comments_limit'] }
+        sorted_columns << :total_comments_count
+      when 'views'
+        filter :numeric_range, views_count: { gt: EXTRA_CONFIG['views_limit'] }
+        sorted_columns << :views_count
+      end
+
+      case params[:time]
+      when 'today'
+        filter :range, last_commented_at: { gt: Time.zone.now.beginning_of_day }
+        sorted_columns << :last_commented_at
+      when 'three_days'
+        filter :range, last_commented_at: { gt: 2.days.ago.beginning_of_day }
+        sorted_columns << :last_commented_at
+      when 'a_week'
+        filter :range, last_commented_at: { gt: 6.days.ago.beginning_of_day }
+        sorted_columns << :last_commented_at
+      when 'a_month'
+        filter :range, last_commented_at: { gt: 1.month.ago.beginning_of_day }
+        sorted_columns << :last_commented_at
+      end
+
+      if params[:node].present?
+        filter :term, node_permalink: params[:node]
+      elsif params[:node_group].present?
+        filter :term, node_group_permalink: params[:node_group]
+      end
+
+      sorted_columns << :last_commented_at unless :last_commented_at.in? sorted_columns
+
+      sort do
+        sorted_columns.each do |sorted_column|
+          by sorted_column, :desc
+        end
+      end
     end
   end
 
@@ -136,30 +173,29 @@ class Post < ActiveRecord::Base
 
   def cleared_by(deleter)
     up_voters.each do |u|
-      u.increment! :points_count, POINTS_CONFIG['up_voter_compensation']
+      u.increase_reload! :points_count, POINTS_CONFIG['up_voter_compensation']
       u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.post.message.up_voter_compensation', nickname: user.nickname)
-      u.decrement! :up_votes_count
+      u.decrease! :up_votes_count
     end
 
     down_voters.each do |u|
-      u.increment! :points_count, POINTS_CONFIG['down_voter_compensation']
+      u.increase_reload! :points_count, POINTS_CONFIG['down_voter_compensation']
       u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.post.message.down_voter_compensation', nickname: user.nickname)
-      u.decrement! :down_votes_count
+      u.decrease! :down_votes_count
     end
 
     collectors.each do |u|
-      u.increment! :points_count, POINTS_CONFIG['collector_compensation']
+      u.increase_reload! :points_count, POINTS_CONFIG['collector_compensation']
       u.receive_message POINTS_CONFIG['collector_compensation'], u.points_count, I18n.t('controller.post.message.collector_compensation', nickname: user.nickname)
-      u.decrement! :collections_count
+      u.decrease! :collections_count
     end
 
     if user == deleter
-      user.increment! :points_count, POINTS_CONFIG['delete_post']
+      user.increase_reload! :points_count, POINTS_CONFIG['delete_post']
       user.receive_message POINTS_CONFIG['delete_post'], user.points_count, I18n.t('controller.post.message.delete_by_self', title: title)
     else
       user.receive_message 0, user.points_count, I18n.t('controller.post.message.delete_by_admin', admin: deleter.nickname, title: title)
     end
-
-    user.decrement! :posts_count
+    user.decrease! :posts_count
   end
 end

@@ -25,7 +25,7 @@ class CollectingRelationshipsController < ApplicationController
     redirect_to show_collections_user_path(current_user), alert: I18n.t('controller.collecting_relationship.post_not_exist') if @post.nil?
   end
 
-  def authroize_create!
+  def authorize_create!
     collecting_relationship = current_user.collecting_relationships.build post_id: @post.id
     ability_result = can? :create, collecting_relationship, false
     redirect_to show_collections_user_path(current_user), alert: ability_result.description unless ability_result.result

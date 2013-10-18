@@ -1,0 +1,21 @@
+<% provide :title, @post.title %>
+
+<%= render 'posts/post_info', post: @post %>
+<hr />
+
+<h4><%= t('view.post.show.up_voters') %></h4>
+<br />
+
+<% if @up_voters.any? %>
+  <div id="up_voters">
+    <% @up_voters.each do |up_voter| %>
+      <%= render 'users/user', user: up_voter %>
+    <% end %>
+
+    <%= paging @up_voters %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/post', post: @post %>
+<% end %>

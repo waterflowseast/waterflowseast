@@ -33,7 +33,7 @@ class Admin::NodeGroupsController < Admin::ApplicationController
   private
 
   def find_node_group
-    @node_group = NodeGroup.find params[:id]
+    @node_group = NodeGroup.find_by_permalink params[:id]
     redirect_to root_path, alert: I18n.t('controller.admin.node_group.not_exist') if @node_group.nil?
   end
 end

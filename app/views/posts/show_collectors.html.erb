@@ -1,0 +1,21 @@
+<% provide :title, @post.title %>
+
+<%= render 'posts/post_info', post: @post %>
+<hr />
+
+<h4><%= t('view.post.show.collectors') %></h4>
+<br />
+
+<% if @collectors.any? %>
+  <div id="collectors">
+    <% @collectors.each do |collector| %>
+      <%= render 'users/user', user: collector %>
+    <% end %>
+
+    <%= paging @collectors %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/post', post: @post %>
+<% end %>

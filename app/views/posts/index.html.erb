@@ -1,0 +1,15 @@
+<% provide :title, t('view.post.index.home') %>
+
+<% if @posts.any? %>
+  <div id="posts">
+    <% @posts.each do |post| %>
+      <%= render 'posts/post', post: post %>
+    <% end %>
+
+    <%= paging @posts %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/posts', node_groups: @node_groups %>
+<% end %>

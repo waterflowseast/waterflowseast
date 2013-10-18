@@ -1,0 +1,15 @@
+<% provide :title, t('view.user.index.site_users') %>
+
+<% if @users.any? %>
+  <div id="users">
+    <% @users.each do |user| %>
+      <%= render 'users/user', user: user %>
+    <% end %>
+
+    <%= paging @users %>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/users' %>
+<% end %>

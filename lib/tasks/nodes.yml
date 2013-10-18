@@ -1,0 +1,133 @@
+- node_group: 前端开发
+  node:
+  - HTML
+  - 模版引擎
+  - CSS
+  - LESS
+  - Sass
+  - Compass
+  - Compass插件
+  - Bootstrap
+  - Foundation
+  - JavaScript
+  - CoffeeScript
+  - jQuery
+  - jQuery插件
+  - MVC框架
+  - Dart
+  - 单页应用
+  - 设计
+- node_group: 后端开发
+  node:
+  - Ruby
+  - Rails
+  - Sinatra
+  - Padrino
+  - web server
+  - app server
+  - ORM
+  - Database
+  - RVM
+  - rbenv
+  - RubyGems
+  - Bundler
+  - TDD&BDD
+  - Rake任务
+  - Git
+  - GitHub
+  - GitLab
+  - Test
+  - Development
+  - Production
+  - Local环境搭建
+  - 其他
+- node_group: 功能开发
+  node:
+  - Authentication
+  - 注册邀请
+  - 邮箱验证
+  - 密码重置
+  - 第三方登录
+  - Authorization
+  - 文件上传
+  - 图片处理
+  - PDF生成
+  - CSV&Excel
+  - Email
+  - 后台任务
+  - Form
+  - 搜索
+  - API
+  - Admin面板
+  - i18n
+  - 多对多关系
+  - 支付
+  - 全站通告
+  - 其他
+- node_group: 上线运行
+  node:
+  - Server环境搭建
+  - 代码部署
+  - 安全
+  - 优化
+  - Debug
+- node_group: 分享交流
+  node:
+  - 推荐
+  - 闲聊
+  - 吐槽
+  - 调查
+  - 打造产品
+  - 培养团队
+  - 培养新人
+  - 自学
+  - 创业
+  - 移民
+  - Mac
+  - Linux
+  - 翻墙
+- node_group: 原创作品
+  node:
+  - 软件
+  - 硬件
+  - 绘画
+  - 书法
+  - 摄影
+  - 图像
+  - 音乐
+  - 歌词
+  - 儿歌
+  - 影视
+  - 配音
+  - 设计
+  - 其他
+- node_group: 原创文字
+  node:
+  - 对联
+  - 诗词曲赋
+  - 现代诗
+  - 随笔
+  - 散文
+  - 杂文
+  - 短篇
+  - 连载
+  - 寓言
+  - 儿童文学
+- node_group: 互帮互助
+  node:
+  - 免费赠送
+  - 以物换物
+  - 诚信买卖
+  - 项目外包
+  - 求职
+  - 招聘
+- node_group: 呼朋引伴
+  node:
+  - 同城寻友
+  - 约伴旅游
+  - 共做项目
+  - 举办活动
+- node_group: 本站相关
+  node:
+  - 疑问
+  - 意见建议

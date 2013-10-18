@@ -29,7 +29,7 @@ class Admin::NodesController < Admin::ApplicationController
   private
 
   def find_node
-    @node = Node.find params[:id]
+    @node = Node.find_by_permalink params[:id]
     redirect_to root_path, alert: I18n.t('controller.admin.node.not_exist') if @node.nil?
   end
 end

@@ -8,6 +8,7 @@ class CreateNodeGroups < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :node_groups, :name
     add_index :node_groups, :position
     add_index :node_groups, :permalink, unique: true
   end

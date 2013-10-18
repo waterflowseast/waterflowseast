@@ -1,0 +1,47 @@
+<% provide :title, t('view.comment.new.title') %>
+
+<% if @commentable.instance_of? Post %>
+  <%= render 'posts/post_info', post: @commentable %>
+<% else %>
+  <%= render 'comments/comment_info', comment: @commentable %>
+<% end %>
+<hr />
+
+<h4><%= t('view.comment.new.title') %></h4>
+
+<%= render 'shared/error_messages', object: @comment %>
+<%= form_for @comment do |f| %>
+  <fieldset>
+    <%= f.hidden_field :commentable_type %>
+    <%= f.hidden_field :commentable_id %>
+
+    <%= link_to t('view.shared._grammar.hint'), '#', data: { reveal_id: "markdown-grammar" } %>
+    <br />
+    <br />
+
+    <div class="row">
+      <div class="small-12 columns">
+        <%= f.text_area :content, rows: 20 %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-6 columns">
+        <%= link_to t('view.comment.new.preview'), '#', class: "button prefix sign-button" %>
+      </div>
+      <div class="small-6 columns">
+        <%= f.submit t('view.comment.new.submit'), class: "button prefix sign-button" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<%= render 'shared/grammar' %>
+
+<% content_for :sidebar do %>
+  <% if @commentable.instance_of? Post %>
+    <%= render 'sidebars/post', post: @commentable %>
+  <% else %>
+    <%= render 'sidebars/comment', comment: @commentable %>
+  <% end %>
+<% end %>

@@ -1,0 +1,34 @@
+<div class="user">
+  <div class="avatar">
+    <%= avatar_link user, :big %>
+  </div>
+
+  <div class="main">
+    <h2><%= user.nickname %></h2>
+
+    <% if user.words %>
+      <div class="words"><%= user.words %></div>
+    <% end %>
+
+    <% if user != current_user %>
+      <div class="action">
+        <span><%= follow_unfollow_url(user) %></span>
+        <span><%= link_to t('view.user._user_info.send_secret'), new_secret_path(receiver: user.permalink) %></span>
+      </div>
+    <% end %>
+
+    <% if current_user.admin? or (current_user == user) %>
+      <br /><%= user.email %>
+    <% end %>
+
+    <% if user.invitation %>
+      <br /><%= t('view.user._user_info.inviter') %> &nbsp; <%= link_to user.inviter.nickname, show_followings_user_path(user.inviter) %>
+    <% end %>
+
+    <br /><%= t('view.user._user_info.signup') %> &nbsp; <%= user.signed_up_confirmed_at.strftime('%Y-%m-%d') %>
+    <br /><%= t('view.user._user_info.signin_lately') %> &nbsp; <%= user.last_signed_in_at.strftime('%Y-%m-%d') %>
+    <br />
+
+    <div class="wfe-clear"></div>
+  </div>
+</div>

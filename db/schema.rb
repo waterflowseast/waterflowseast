@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.datetime "updated_at",                  :null => false
   end
 
+  add_index "node_groups", ["name"], :name => "index_node_groups_on_name"
   add_index "node_groups", ["permalink"], :name => "index_node_groups_on_permalink", :unique => true
   add_index "node_groups", ["position"], :name => "index_node_groups_on_position"
 
@@ -95,6 +96,7 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.datetime "updated_at",                     :null => false
   end
 
+  add_index "nodes", ["name"], :name => "index_nodes_on_name"
   add_index "nodes", ["node_group_id", "position"], :name => "index_nodes_on_node_group_id_and_position"
   add_index "nodes", ["permalink"], :name => "index_nodes_on_permalink", :unique => true
 
@@ -113,17 +115,14 @@ ActiveRecord::Schema.define(:version => 20130829122515) do
     t.integer  "collectors_count",      :default => 0,    :null => false
     t.integer  "up_voters_count",       :default => 0,    :null => false
     t.integer  "down_voters_count",     :default => 0,    :null => false
+    t.datetime "last_commented_at",                       :null => false
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
   end
 
+  add_index "posts", ["created_at", "user_id"], :name => "index_posts_on_created_at_and_user_id"
+  add_index "posts", ["last_commented_at", "user_id"], :name => "index_posts_on_last_commented_at_and_user_id"
   add_index "posts", ["permalink"], :name => "index_posts_on_permalink", :unique => true
-  add_index "posts", ["updated_at", "collectors_count"], :name => "index_posts_on_updated_at_and_collectors_count"
-  add_index "posts", ["updated_at", "node_id"], :name => "index_posts_on_updated_at_and_node_id"
-  add_index "posts", ["updated_at", "total_comments_count"], :name => "index_posts_on_updated_at_and_total_comments_count"
-  add_index "posts", ["updated_at", "up_voters_count"], :name => "index_posts_on_updated_at_and_up_voters_count"
-  add_index "posts", ["updated_at", "user_id"], :name => "index_posts_on_updated_at_and_user_id"
-  add_index "posts", ["updated_at"], :name => "index_posts_on_updated_at"
 
   create_table "secrets", :force => true do |t|
     t.integer  "sender_id"

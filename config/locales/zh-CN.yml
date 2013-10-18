@@ -150,7 +150,7 @@ zh-CN:
       messages:
         inclusion: "不包含于列表中"
         exclusion: "是保留关键字"
-        invalid: "是无效的"
+        invalid: "格式错误"
         confirmation: "与确认值不匹配"
         accepted: "必须是可被接受的"
         empty: "不能留空"
@@ -183,7 +183,7 @@ zh-CN:
     messages:
       inclusion: "不包含于列表中"
       exclusion: "是保留关键字"
-      invalid: "是无效的"
+      invalid: "格式错误"
       confirmation: "与确认值不匹配"
       accepted: "必须是可被接受的"
       empty: "不能留空"
@@ -210,5 +210,6 @@ zh-CN:
       submit: "储存%{model}"
 
   will_paginate:
-    previous_label: 前页
-    next_label: 后页
+    previous_label: "前页"
+    next_label: "后页"
+    page_gap: "..."

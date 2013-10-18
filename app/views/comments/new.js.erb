@@ -1,0 +1,23 @@
+if ( $("#<%= dom_id(@commentable) %>").next(".nested-comments").length == 0 ) {
+  var container = $("#comments");
+} else {
+  var container = $("#<%= dom_id(@commentable) %>").next(".nested-comments");
+}
+
+<% if @comment.errors[:base].present? %>
+
+  if ( container.children("#new_comment").length == 0 ) {
+    container.prepend("<%= escape_javascript render("shared/comment_errors", object: @comment.errors[:base]) %>");
+  } else {
+    container.children("#new_comment").replaceWith("<%= escape_javascript render("shared/comment_errors", object: @comment.errors[:base]) %>");
+  }
+
+<% else %>
+
+  if ( container.children("#new_comment").length == 0 ) {
+    container.prepend("<%= escape_javascript render("comments/new", comment: @comment) %>");
+  } else {
+    container.children("#new_comment").replaceWith("<%= escape_javascript render("comments/new", comment: @comment) %>");
+  }
+
+<% end %>

@@ -1,0 +1,23 @@
+<%= div_for post do %>
+  <div class="avatar">
+    <%= avatar_link post.user, :small %>
+  </div>
+
+  <div class="main">
+    <div class="headline">
+      <span><%= post.user.nickname %></span>
+      <span><%= post.created_at.strftime('%Y-%m-%d') %></span>
+      <span><%= image_tag('collect.png', size: '13x13', class: 'wfe-image-collect') %> <%= post.collectors_count %></span>
+      <span><%= image_tag('up.png', size: '13x13', class: 'wfe-image-up') %> <%= post.up_voters_count %></span>
+      <span><%= image_tag('down.png', size: '13x13', class: 'wfe-image-down') %> <%= post.down_voters_count %></span>
+      <span><%= image_tag('reply.png', size: '13x13', class: 'wfe-image-reply') %> <%= post.direct_comments_count %> / <%= post.total_comments_count %></span>
+      <span><%= image_tag('view.png', size: '13x13', class: 'wfe-image-view') %> <%= post.views_count %></span>
+    </div>
+
+    <div class="content">
+      <h2 class="post-title"><%= link_to post.title, show_total_comments_post_path(post) %></h2>
+    </div>
+
+    <div class="wfe-clear"></div>
+  </div>
+<% end %>

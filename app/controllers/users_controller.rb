@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_filter :authenticate_no_user!, only: [:new, :create]
   before_filter :authenticate_user!, except: [:new, :create]
 
   before_filter :find_user, except: [:index, :new, :create]
@@ -8,9 +9,10 @@ class UsersController < ApplicationController
 
   def index
     @users = User.available_users
+    names = params[:search] ? params[:search].tr('%', '') : nil
 
-    if params[:search]
-      @users = @users.search params[:search]
+    if names.present?
+      @users = @users.search names
     else
       @users = @users.select_sort params[:sort]
     end
@@ -43,11 +45,13 @@ class UsersController < ApplicationController
   end
 
   def show_up_votes
-    @up_votes = @user.voting_up_relationships.includes(:votable).order('voting_up_relationships.created_at DESC').paginate(page: params[:page]).map(&:votable)
+    @voting_up_relationships = @user.voting_up_relationships.includes(:votable).order('voting_up_relationships.created_at DESC').paginate(page: params[:page])
+    @up_votes = @voting_up_relationships.map(&:votable)
   end
 
   def show_down_votes
-    @down_votes = @user.voting_down_relationships.includes(:votable).order('voting_down_relationships.created_at DESC').paginate(page: params[:page]).map(&:votable)
+    @voting_down_relationships = @user.voting_down_relationships.includes(:votable).order('voting_down_relationships.created_at DESC').paginate(page: params[:page])
+    @down_votes = @voting_down_relationships.map(&:votable)
   end
 
   def show_received_secrets
@@ -69,7 +73,7 @@ class UsersController < ApplicationController
   
   def new
     @user = User.new invitation_token: params[:invitation_token]
-    @user.email = @user.invitation.try :receiver_email
+    @user.email = @user.invitation.receiver_email if @user.invitation
   end
 
   def create
@@ -97,7 +101,7 @@ class UsersController < ApplicationController
   end
 
   def update_avatar
-    if @user.update_attributes params[:user].permit(:avatar)
+    if @user.update_attributes params[:user].permit(:avatar, :remove_avatar)
       redirect_to show_followings_user_path(@user), notice: I18n.t('controller.user.update_avatar')
     else
       render :change_avatar
@@ -124,7 +128,7 @@ class UsersController < ApplicationController
   private
 
   def find_user
-    @user = User.available_users.find params[:id]
+    @user = User.available_users.find_by_permalink params[:id]
     redirect_to users_path, alert: I18n.t('controller.user.not_exist') if @user.nil?
   end
 

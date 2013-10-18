@@ -1,0 +1,28 @@
+<div id="new_comment">
+  <div class="avatar">
+    <%= avatar_link current_user, :small %>
+  </div>
+
+  <div class="main">
+    <div class="headline">
+      <span><%= current_user.nickname %></span>
+      <span><%= Time.zone.now.strftime('%Y-%m-%d  %H:%M:%S') %></span>
+    </div>
+
+    <div class="content">
+      <form class="error_messages">
+        <fieldset>
+          <h2><%= t('view.shared._comment_errors.title') %></h2>
+
+          <div class="row">
+            <ul>
+              <% object.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

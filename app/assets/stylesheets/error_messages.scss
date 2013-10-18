@@ -1,0 +1,17 @@
+form.error_messages {
+  fieldset {
+    border-color: $wfe-alert-color;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      color: $wfe-alert-color;
+    }
+
+    li {
+      color: $wfe-alert-color;
+    }
+  }
+}

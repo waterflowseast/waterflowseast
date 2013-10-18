@@ -1,0 +1,41 @@
+<%= div_for comment do %>
+  <div class="avatar">
+    <%= avatar_link current_user, :small %>
+  </div>
+
+  <div class="main">
+    <div class="headline">
+      <span><%= current_user.nickname %></span>
+      <span><%= Time.zone.now.strftime('%Y-%m-%d  %H:%M:%S') %></span>
+    </div>
+
+    <div class="content">
+      <%= render 'shared/error_messages', object: comment %>
+      <%= form_for comment, remote: true do |f| %>
+        <fieldset>
+          <%= f.hidden_field :commentable_type %>
+          <%= f.hidden_field :commentable_id %>
+
+          <%= link_to t('view.shared._grammar.hint'), '#', data: { reveal_id: "markdown-grammar" } %>
+          <br />
+          <br />
+
+          <div class="row">
+            <div class="small-12 columns">
+              <%= f.text_area :content, rows: 10 %>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="small-6 columns">
+              <%= link_to t('view.comment.new.preview'), '#', class: "button prefix sign-button" %>
+            </div>
+            <div class="small-6 columns">
+              <%= f.submit t('view.comment.new.submit'), class: "button prefix sign-button" %>
+            </div>
+          </div>
+        </fieldset>
+      <% end %>
+    </div>
+  </div>
+<% end %>
