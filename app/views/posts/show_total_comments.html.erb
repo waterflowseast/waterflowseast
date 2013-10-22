@@ -13,7 +13,10 @@
   <% end %>
 </div>
 
-<%= render 'shared/grammar' %>
+<% if signed_in? %>
+  <%= render 'shared/grammar' %>
+  <%= render 'shared/preview' %>
+<% end %>
 
 <% content_for :sidebar do %>
   <%= render 'sidebars/post', post: @post %>

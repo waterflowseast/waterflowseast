@@ -1,13 +1,13 @@
 class IntroductionsController < ApplicationController
-  def introduction
-    
+  def points
   end
 
-  def points
-    
+  def restrictions
   end
 
   def markdown
-    
+  end
+
+  def aphorism
   end
 end

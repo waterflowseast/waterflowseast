@@ -13,4 +13,17 @@ module ApplicationHelper
   def paging(pages)
     will_paginate pages, class: 'pagination', inner_window: 2, outer_window: 0, renderer: WillPaginate::ActionView::FoundationLinkRenderer
   end
+
+  def points_config(key)
+    key = key.to_s
+    abs = POINTS_CONFIG[key].abs
+
+    if POINTS_CONFIG[key] > 0
+      "＋#{abs}"
+    elsif POINTS_CONFIG[key] < 0
+      "－#{abs}"
+    else
+      "#{abs}"
+    end
+  end
 end

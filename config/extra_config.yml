@@ -1,9 +1,9 @@
 # 当用户数达到以下值时，之后的注册都需要邀请码
 sign_in_limit_without_invitation: 8000
 
-# 回复的内容可在以下时间内进行更改，单位为分钟
+# 回复的内容可在以下时间内进行修改，单位为分钟
 comment_out_of_time_in_minutes: 15
-# 帖子的内容可在以下时间内进行更改，单位为小时
+# 帖子的内容可在以下时间内进行修改，单位为小时
 post_out_of_time_in_hours: 3
 # 邮箱验证需在以下时间内完成，单位为小时
 confirm_out_of_time_in_hours: 24
@@ -16,15 +16,15 @@ node_group_name_max: 16
 node_name_max: 16
 
 # 帖子标题的最小长度
-post_title_min: 10
+post_title_min: 7
 # 帖子标题的最大长度
 post_title_max: 80
 # 帖子内容的最小长度
-post_content_min: 30
+post_content_min: 20
 # 帖子附言的最小长度
 post_extra_info_min: 10
 # 回复内容的最小长度
-comment_content_min: 10
+comment_content_min: 7
 # 私信内容的最小长度
 secret_content_min: 10
 

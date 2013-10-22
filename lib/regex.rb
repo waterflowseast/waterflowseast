@@ -3,9 +3,10 @@
 module Waterflowseast
   module Regex
     def self.nickname
-      /\A[\p{Han}a-z][\p{Han}\w\.\-]{1,14}[\p{Han}a-z0-9]\z/i
+      @nickname_regex ||= /\A[\p{Han}a-z][\p{Han}\w\.\-]{1,14}[\p{Han}a-z0-9]\z/i
     end
 
+    # steal this from Authlogic gem
     def self.email
       @email_regex ||= begin
         email_name_regex  = '[A-Z0-9_\.%\+\-\']+'
@@ -16,7 +17,7 @@ module Waterflowseast
     end
 
     def self.video
-      %r{!v<a href="([^">]*)">[^<]*</a>}
+      @video_regex ||= %r{!v<a href="([^">]*)">[^<]*</a>}
     end
   end
 end

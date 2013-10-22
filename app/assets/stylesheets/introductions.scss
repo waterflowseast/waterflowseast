@@ -1,0 +1,83 @@
+#aphorism {
+  div.small-gap {
+    margin-bottom: 50px;
+  }
+
+  div.big-gap {
+    margin-bottom: 120px;
+  }
+
+  pre {
+    background-color: $wfe-body-bg-color;
+    text-align: center;
+    font-weight: 1000;
+    font-size: 29px;
+    line-height: 36px;
+    color: $wfe-primary-color;
+
+    &.result {
+      font-size: 20px;
+      line-height: 24px;
+      color: $wfe-alert-color;
+    }
+  }
+}
+
+#markdown {
+  #markdown-link {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-align: center;
+
+    a {
+      font-size: 18px;
+    }
+  }
+
+  .row {
+    h5 {
+      color: #666;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+#restrictions {
+  .row {
+    h5 {
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      margin-bottom: 30px;
+
+      th {
+        text-align: center;
+      }
+
+      td {
+      font-size: 13px;
+      line-height: 20px;
+      text-align: center;
+      }
+    }
+  }
+}
+
+#points {
+  table {
+    th {
+      text-align: center;
+    }
+
+    td {
+      font-size: 13px;
+      line-height: 20px;
+      text-align: center;
+    }
+  }
+}

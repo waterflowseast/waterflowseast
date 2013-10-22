@@ -6,9 +6,12 @@ module CommentsHelper
   end
 
   def nested_comments(comments)
-    comments.map do |comment; sub_comments|
-      sub_comments = (comment.total_comments_count > 0) ? comment.comments : []
-      render(comment) + content_tag(:div, nested_comments(sub_comments), class: 'nested-comments')
+    comments.map do |comment|
+      if comment.total_comments_count > 0
+        render(comment) + content_tag(:div, nested_comments(comment.comments), class: 'nested-comments')
+      else
+        render(comment) + content_tag(:div, nil, class: 'nested-comments')
+      end
     end.join.html_safe
   end
 end

@@ -64,22 +64,21 @@
 }
 
 .code_header {
-  background-color: $wfe-primary-color;
   font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
-  color: white;
+  color: #666;
   font-size: 14px;
   text-align: center;
-  padding: 2px 0 1px;
+  padding: 2px 0 3px;
 }
 
 .highlight {
-  background-color: lighten($wfe-body-bg-color, 2%);
 }
 
 code {
   border: solid 1px #ccc;
   background-color: #eee;
   font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
+  color: $wfe-body-font-color;
   padding: 0 3px;
 }
 
@@ -92,8 +91,6 @@ pre code {
 pre {
   margin: 0;
   margin-bottom: 30px;
-  border: solid 1px $wfe-input-border-color;
-  border-top: none;
   font-size: 12px;
   font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
   line-height: 14px;
@@ -104,6 +101,8 @@ pre {
   overflow-x: auto;
   word-break: inherit;
   word-wrap: inherit;
+  border-radius: 5px;
+  background-color: $eye-protected-color;
 }
 
 pre a::before {
@@ -112,8 +111,8 @@ pre a::before {
   width: 25px;
   text-align: center;
   display: inline-block;
-  background-color: darken($wfe-body-bg-color, 3%);
-  color: $wfe-topbar-font-color;
+  background-color: $wfe-table-head-color;
+  color: #eee;
   font-weight: bold;
   font-size: 10px;
   margin-right: 12px;

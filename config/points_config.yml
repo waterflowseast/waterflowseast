@@ -43,7 +43,7 @@ be_followed: 4
 send_secret: -8
 # B未关注A，A给B发私信，B所得的补偿
 received_secret: 4
-# B关注A，A给B发私信，A不会消耗积分，B也不会被补偿积分
+# B已关注A，A给B发私信，A不会消耗积分，B也不会被补偿积分
 
 # 邀请消耗
 invite: -16

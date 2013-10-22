@@ -59,7 +59,7 @@
   margin-top: -2px;
 }
 
-.content {
+.main > .content {
   h2.post-title {
     color: $wfe-sidebar-font-color;
     font-size: 14px;
@@ -102,9 +102,11 @@
 
   h1.post-title {
     font-size: 23px;
+    color: $wfe-primary-color;
   }
 
   h2.post-title {
-    font-size: 16px;
+    font-size: 20px;
+    color: $wfe-primary-color;
   }
 }

@@ -1,0 +1,24 @@
+<% provide :title, t('view.introduction.aphorism.title') %>
+
+<% cache :aphorism do %>
+  <h4><%= t('view.introduction.aphorism.title') %></h4>
+
+  <div id="aphorism">
+    <div class="small-gap"></div>
+
+    <pre>x<->(x){x}[x]</pre>
+    <pre>x < ->(x){x}[x]</pre>
+    <pre>x < lambda {|x| x }.call(x)</pre>
+    <pre>x < x</pre>
+
+    <div class="big-gap"></div>
+
+    <pre class="result">undefined local variable or method `x'</pre>
+    <pre class="result">undefined method `<'</pre>
+    <pre class="result">false</pre>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/introductions' %>
+<% end %>

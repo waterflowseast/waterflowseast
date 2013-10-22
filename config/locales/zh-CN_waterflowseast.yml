@@ -148,11 +148,11 @@ zh-CN:
       application:
         admin_only: '只有管理员才有权限访问这些页面'
       node_group:
-        just_created: "你成功创建了《%{node_group}》节点组"
+        just_created: "你成功创建了【%{node_group}】节点组"
         not_exist: '你所要修改的节点组不存在'
         just_updated: '节点组已更新'
       node:
-        just_created: "你在《%{node_group}》节点组下成功创建了《%{node}》节点"
+        just_created: "你在【%{node_group}】节点组下成功创建了【%{node}】节点"
         not_exist: '你所要修改的节点不存在'
         just_updated: '节点已更新'
 
@@ -165,16 +165,16 @@ zh-CN:
       update_extra_info: '你成功修改了帖子的附言'
       just_destroyed: '你成功删除了帖子'
       message:
-        points_subtraction: "你在节点组《%{node_group}》之下的节点《%{node}》发表了帖子"
-        to_followeds: "%{nickname} 在节点组《%{node_group}》之下的节点《%{node}》发表了帖子"
+        points_subtraction: "你在节点组【%{node_group}】之下的节点【%{node}】发表了帖子"
+        to_followeds: "%{nickname} 在节点组【%{node_group}】之下的节点【%{node}】发表了帖子"
         up_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
         down_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
         collector_compensation: "%{nickname} 的帖子被删除，系统自动删除所有收藏，你对其进行过收藏，为表示歉意，系统已经对你进行积分补偿"
-        delete_by_self: "你删除了帖子：《%{title}》"
-        delete_by_admin: "管理员 %{admin} 删除了你的帖子：《%{title}》"
+        delete_by_self: "你删除了帖子：【%{title}】"
+        delete_by_admin: "管理员 %{admin} 删除了你的帖子：【%{title}】"
 
     comment:
-      wrong_class: "无法对《%{klass}》的实例进行回复"
+      wrong_class: "无法对【%{klass}】的实例进行回复"
       commentable_not_exist: "你所要回复的帖子或回复不存在"
       is_comment: '回复'
       is_post: '帖子'
@@ -223,7 +223,7 @@ zh-CN:
         inviter_bonus: "你引荐的用户 %{name} 的帖子被收藏%{count}次，作为Ta的引荐人，系统将奖励你%{bonus}积分"
 
     voting_up_relationship:
-      wrong_class: "无法对《%{klass}》的实例表示赞同"
+      wrong_class: "无法对【%{klass}】的实例表示赞同"
       votable_not_exist: '你所要赞同的帖子或回复不存在'
       just_voted_up: "你对 %{nickname} 的帖子或回复表示了赞同"
       message:
@@ -234,7 +234,7 @@ zh-CN:
         inviter_bonus: "你引荐的用户 %{name} 的帖子或回复被赞同%{count}次，作为Ta的引荐人，系统将奖励你%{bonus}积分"
 
     voting_down_relationship:
-      wrong_class: "无法对《%{klass}》的实例表示反对"
+      wrong_class: "无法对【%{klass}】的实例表示反对"
       votable_not_exist: '你所要反对的帖子或回复不存在'
       just_voted_down: "你对 %{nickname} 的帖子或回复表示了反对"
       message:
@@ -374,6 +374,19 @@ zh-CN:
         email: '邮箱'
         confirm: '确认'
 
+    introduction:
+      points:
+        title: '积分'
+      restrictions:
+        title: '限制'
+      markdown:
+        title: 'Markdown'
+        post_code: '贴代码'
+        post_image: '贴图片'
+        post_video: '贴视频'
+      aphorism:
+        title: '箴言'
+
     layout:
       _topbar:
         signup: '注册'
@@ -383,7 +396,7 @@ zh-CN:
         post: '发帖'
         search: '搜帖'
         nodes: '节点管理'
-        introduction: '本站介绍'
+        introductions: '本站介绍'
 
     password_reset:
       new:
@@ -455,6 +468,8 @@ zh-CN:
         title: '错误'
       _comment_errors:
         title: '错误'
+      _preview:
+        title: '预览'
 
     sidebar:
       _admin:
@@ -529,6 +544,12 @@ zh-CN:
         search_users: '查找用户'
         placeholder: '关键字1  关键字2'
         search_button: '查找'
+      _introductions:
+        introductions: '本站介绍'
+        points: '积分'
+        restrictions: '限制'
+        markdown: 'Markdown'
+        aphorism: '箴言'
 
     user:
       _comment:

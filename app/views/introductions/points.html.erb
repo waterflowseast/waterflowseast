@@ -1,1 +1,195 @@
-This is points.
+<% provide :title, t('view.introduction.points.title') %>
+
+<% cache :points do %>
+  <h4><%= t('view.introduction.points.title') %></h4>
+
+  <div id="points">
+    <table>
+      <thead>
+        <tr>
+          <th width="42%">事件</th>
+          <th width="24%">奖励</th>
+          <th width="10%">消耗</th>
+          <th width="24%">补偿</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>注册帐号</td>
+          <td><%= points_config :new_account %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>日常登录</td>
+          <td><%= points_config :normal_day_sign_in %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>月初登录</td>
+          <td><%= points_config :first_month_day_sign_in %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>【<%= EXTRA_CONFIG['technicals'].join('、') %>】节点组下发帖</td>
+          <td></td>
+          <td>0</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>【<%= EXTRA_CONFIG['children'].join('、') %>】节点下发帖</td>
+          <td><%= points_config :children_post %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>其他节点下发帖</td>
+          <td></td>
+          <td><%= points_config :non_technical_post %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>删帖</td>
+          <td></td>
+          <td><%= points_config :delete_post %></td>
+          <td>
+            其他子回复者<%= points_config :commenter_compensation %><br />
+            赞同者<%= points_config :up_voter_compensation %><br />
+            反对者<%= points_config :down_voter_compensation %><br />
+            收藏者<%= points_config :collector_compensation %>
+          </td>
+        </tr>
+
+        <tr>
+          <td>回复</td>
+          <td></td>
+          <td><%= points_config :comment %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>删除回复</td>
+          <td></td>
+          <td><%= points_config :delete_comment %></td>
+          <td>
+            其他子回复者<%= points_config :commenter_compensation %><br />
+            赞同者<%= points_config :up_voter_compensation %><br />
+            反对者<%= points_config :down_voter_compensation %>
+          </td>
+        </tr>
+
+        <tr>
+          <td>A赞同B</td>
+          <td>B<%= points_config :be_voted_up %></td>
+          <td>A<%= points_config :vote_up %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>A反对B</td>
+          <td></td>
+          <td>A<%= points_config :vote_down %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>A收藏B的帖子</td>
+          <td>B<%= points_config :be_collected %></td>
+          <td>A<%= points_config :collect %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>A关注B</td>
+          <td>B<%= points_config :be_followed %></td>
+          <td>A<%= points_config :follow %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>B未关注A，A给B发私信</td>
+          <td></td>
+          <td>A<%= points_config :send_secret %></td>
+          <td>B<%= points_config :received_secret %></td>
+        </tr>
+
+        <tr>
+          <td>B已关注A，A给B发私信</td>
+          <td></td>
+          <td>A－0</td>
+          <td>B＋0</td>
+        </tr>
+
+        <tr>
+          <td>邀请别人</td>
+          <td></td>
+          <td><%= points_config :invite %></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>被收藏<%= POINTS_CONFIG['level_1_number'] %>次</td>
+          <td>owner及inviter<%= points_config :be_collected_level_1_points %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>被收藏<%= POINTS_CONFIG['level_2_number'] %>次</td>
+          <td>owner及inviter<%= points_config :be_collected_level_2_points %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>被收藏<%= POINTS_CONFIG['level_3_number'] %>次</td>
+          <td>owner及inviter<%= points_config :be_collected_level_3_points %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>被赞同<%= POINTS_CONFIG['level_1_number'] %>次</td>
+          <td>owner及inviter<%= points_config :be_voted_up_level_1_points %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>被赞同<%= POINTS_CONFIG['level_2_number'] %>次</td>
+          <td>owner及inviter<%= points_config :be_voted_up_level_2_points %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>被赞同<%= POINTS_CONFIG['level_3_number'] %>次</td>
+          <td>owner及inviter<%= points_config :be_voted_up_level_3_points %></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td colspan="4">帖子被收藏<%= POINTS_CONFIG['valuable_limit_for_collecting'] %>次后，系统将其设置为不可删除</td>
+        </tr>
+
+        <tr>
+          <td colspan="4">帖子被赞同<%= POINTS_CONFIG['valuable_limit_for_voting_up'] %>次后，系统将其设置为不可删除</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/introductions' %>
+<% end %>

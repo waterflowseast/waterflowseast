@@ -1,0 +1,132 @@
+<% provide :title, t('view.introduction.restrictions.title') %>
+
+<% cache :restrictions do %>
+  <h4><%= t('view.introduction.restrictions.title') %></h4>
+
+  <div id="restrictions">
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>长度</h5>
+        <table>
+          <thead>
+            <tr>
+              <th width="40%">说明</th>
+              <th width="30%">最短</th>
+              <th width="30%">最长</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>昵称</td>
+              <td>3</td>
+              <td>16</td>
+            </tr>
+            <tr>
+              <td>密码</td>
+              <td><%= EXTRA_CONFIG['password_min'] %></td>
+              <td><%= EXTRA_CONFIG['password_max'] %></td>
+            </tr>
+            <tr>
+              <td>帖子标题</td>
+              <td><%= EXTRA_CONFIG['post_title_min'] %></td>
+              <td><%= EXTRA_CONFIG['post_title_max'] %></td>
+            </tr>
+            <tr>
+              <td>帖子内容</td>
+              <td><%= EXTRA_CONFIG['post_content_min'] %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>附言（若存在）</td>
+              <td><%= EXTRA_CONFIG['post_extra_info_min'] %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>回复</td>
+              <td><%= EXTRA_CONFIG['comment_content_min'] %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>私信</td>
+              <td><%= EXTRA_CONFIG['secret_content_min'] %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>语录</td>
+              <td></td>
+              <td><%= EXTRA_CONFIG['words_max'] %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>时效</h5>
+        <table>
+          <tbody>
+            <tr>
+              <td width="40%">邮箱验证</td>
+              <td width="60%">注册后 <strong><%= EXTRA_CONFIG['confirm_out_of_time_in_hours'] %></strong> 小时内有效</td>
+            </tr>
+            <tr>
+              <td>密码重置</td>
+              <td>请求重置后 <strong><%= EXTRA_CONFIG['reset_out_of_time_in_minutes'] %></strong> 分钟内有效</td>
+            </tr>
+            <tr>
+              <td>帖子内容</td>
+              <td>生成后 <strong><%= EXTRA_CONFIG['post_out_of_time_in_hours'] %></strong> 小时内可修改</td>
+            </tr>
+            <tr>
+              <td>帖子附言</td>
+              <td>随时可以修改或删除</td>
+            </tr>
+            <tr>
+              <td>回复</td>
+              <td>生成后 <strong><%= EXTRA_CONFIG['comment_out_of_time_in_minutes'] %></strong> 分钟内可修改</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>其他</h5>
+        <table>
+          <tbody>
+            <tr>
+              <td>当回复时，最多可嵌套 <strong><%= EXTRA_CONFIG['nested_level_max'] %></strong> 层</td>
+            </tr>
+            <tr>
+              <td>注册后未在规定时间内进行邮箱验证的帐号，将被系统自动删除</td>
+            </tr>
+            <tr>
+              <td>连续三个月没有进行登录的帐号，将被系统自动删除</td>
+            </tr>
+            <tr>
+              <td>当用户数达到 <strong><%= EXTRA_CONFIG['sign_in_limit_without_invitation'] %></strong> ，之后所有的注册都需要邀请码</td>
+            </tr>
+            <tr>
+              <td>点击首页右侧【高收藏】时，只显示收藏数大于 <strong><%= EXTRA_CONFIG['collectors_limit'] %></strong> 的帖子</td>
+            </tr>
+            <tr>
+              <td>点击首页右侧【高赞同】时，只显示赞同数大于 <strong><%= EXTRA_CONFIG['up_voters_limit'] %></strong> 的帖子</td>
+            </tr>
+            <tr>
+              <td>点击首页右侧【高回复】时，只显示总回复数大于 <strong><%= EXTRA_CONFIG['total_comments_limit'] %></strong> 的帖子</td>
+            </tr>
+            <tr>
+              <td>点击首页右侧【高浏览】时，只显示浏览数大于 <strong><%= EXTRA_CONFIG['views_limit'] %></strong> 的帖子</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/introductions' %>
+<% end %>

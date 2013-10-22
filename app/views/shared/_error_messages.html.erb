@@ -1,7 +1,7 @@
 <% if object.errors.any? %>
   <form class="error_messages">
     <fieldset>
-      <h2><%= t('view.shared._error_messages.title') %></h2>
+      <h2 class="warning"><%= t('view.shared._error_messages.title') %></h2>
 
       <div class="row">
         <% object.errors.full_messages.in_groups(2).each do |msgs| %>

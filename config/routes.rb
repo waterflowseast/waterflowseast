@@ -64,11 +64,13 @@ Waterflowseast::Application.routes.draw do
       get :show_down_voters
     end
   end
+  post '/preview' => 'preview#create'
 
   scope module: 'introductions' do
-    get :introduction
     get :points
+    get :restrictions
     get :markdown
+    get :aphorism
   end
 
   resources :secrets, only: [:new, :create, :destroy]

@@ -1,1 +1,38 @@
-This is markdown.
+<% provide :title, t('view.introduction.markdown.title') %>
+
+<% cache :markdown do %>
+  <h4><%= t('view.introduction.markdown.title') %></h4>
+
+  <div id="markdown">
+    <div id="markdown-link">
+      <%= link_to t('view.shared._grammar.hint'), '#', data: { reveal_id: "markdown-grammar" } %>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h5><%= t('view.introduction.markdown.post_code') %></h5>
+        <%= raw_render IntroductionsMarkdown.post_code %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h5><%= t('view.introduction.markdown.post_image') %></h5>
+        <%= raw_render IntroductionsMarkdown.post_image %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <h5><%= t('view.introduction.markdown.post_video') %></h5>
+        <%= raw_render IntroductionsMarkdown.post_video %>
+      </div>
+    </div>
+  </div>
+
+  <%= render 'shared/grammar' %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render 'sidebars/introductions' %>
+<% end %>

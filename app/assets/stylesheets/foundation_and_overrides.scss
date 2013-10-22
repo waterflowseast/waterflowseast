@@ -3,6 +3,7 @@
 //
 
 $eye-protected-color: #cce8cf;
+$wfe-table-head-color: darken($eye-protected-color, 30%);
 
 $wfe-divider-color: darken($eye-protected-color, 20%);
 $wfe-primary-color: darken($eye-protected-color, 40%);
@@ -1181,18 +1182,18 @@ $table-border-color: $wfe-input-border-color;
 
 // Table head styles
 
-$table-head-bg: $wfe-primary-color;
+$table-head-bg: $wfe-table-head-color;
 // $table-head-font-size: emCalc(14px);
-// $table-head-font-color: #222;
+$table-head-font-color: #eee;
 // $table-head-font-weight: bold;
 // $table-head-padding: emCalc(8px) emCalc(10px) emCalc(10px);
 
 // Row padding and font styles
 
 // $table-row-padding: emCalc(9px) emCalc(10px);
-// $table-row-font-size: emCalc(14px);
-// $table-row-font-color: #222;
-// $table-line-height: emCalc(18px);
+$table-row-font-size: emCalc(14px);
+$table-row-font-color: #666;
+$table-line-height: emCalc(20px);
 
 // Display and margin of tables
 

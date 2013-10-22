@@ -1,0 +1,33 @@
+.main > .content, .post-wrapper, #markdown-grammar > table, #preview_content {
+  h1, h2, h3, h4, h5, h6 {
+    color: $wfe-sidebar-font-color;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  h4 {
+    font-size: 14px;
+  }
+
+  h5 {
+    font-size: 14px;
+  }
+
+  h6 {
+    font-size: 14px;
+  }
+
+  hr {
+    border: 1px solid #bbb;
+  }
+}
