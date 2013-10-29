@@ -99,8 +99,8 @@ EOF
 
 ssh deployer@$SERVER_IP "
 cd /home/deployer/apps/$APPLICATION_NAME/current
-rake environment tire:import CLASS='Post' FORCE=true RAILS_ENV='production'
-rake db:nodes RAILS_ENV='production'
+RAILS_ENV=production bundle exec rake environment tire:import CLASS='Post' FORCE=true
+RAILS_ENV=production bundle exec rake db:nodes
 "
 
 

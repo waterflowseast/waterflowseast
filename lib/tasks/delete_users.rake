@@ -8,7 +8,8 @@ namespace :db do
     # ---------------- delete users who haven't signed in for three months ----------------
     User.where("signed_up_confirmed_at IS NOT NULL").where("last_signed_in_at < ?", 3.months.ago).each do |user|
       if (! user.admin?) and (user.great_posts_count == 0)
-        DestroyUserWorker.perform_async user.id
+        user.destroy_self
+        sleep 10
       end
     end
   end
