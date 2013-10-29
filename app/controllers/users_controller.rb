@@ -122,7 +122,7 @@ class UsersController < ApplicationController
 
   def destroy
     DestroyUserWorker.perform_async @user.id
-    sign_out
+    sign_out unless current_user.admin?
     redirect_to root_path, notice: I18n.t('controller.user.just_destroyed', nickname: @user.nickname)
   end
 
