@@ -16,7 +16,7 @@ development:
   adapter: postgresql
   encoding: unicode
   database: waterflowseast_development
-  pool: 5
+  pool: 25
   username: waterflowseast
   password:
 

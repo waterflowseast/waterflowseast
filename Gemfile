@@ -17,6 +17,9 @@ gem 'capistrano', '~> 2.15.4'
 gem 'rvm-capistrano', '~> 1.3.1'
 gem 'whenever', '~> 0.8.2', require: false
 gem 'mini_magick', '~> 3.6.0'
+gem 'sidekiq', '~> 2.12.4'
+gem 'sinatra', '~> 1.4.4', require: false
+gem 'slim', '~> 2.0.1'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.13.2'

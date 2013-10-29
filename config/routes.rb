@@ -1,3 +1,6 @@
+require 'sidekiq/web'
+require 'admin_constraint'
+
 Waterflowseast::Application.routes.draw do
   root to: 'posts#index'
 
@@ -87,4 +90,6 @@ Waterflowseast::Application.routes.draw do
     resources :node_groups, except: [:show, :destroy]
     resources :nodes, except: [:index, :show, :destroy]
   end
+
+  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 end

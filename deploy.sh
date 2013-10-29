@@ -42,7 +42,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: ${APPLICATION_NAME}_production
-  pool: 5
+  pool: 25
   username: $APPLICATION_NAME
   password: $DATABASE_PASSWORD
 
@@ -87,6 +87,20 @@ if [ -f /etc/nginx/sites-enabled/default ]; then
   sudo rm -rf /etc/nginx/sites-enabled/default
   sudo service nginx restart
 fi
+"
+
+
+
+cat <<EOF
+####################################################################################################
+#                                  prepare elasticsearch and nodes                                 #
+####################################################################################################
+EOF
+
+ssh deployer@$SERVER_IP "
+cd /home/deployer/apps/$APPLICATION_NAME/current
+rake environment tire:import CLASS='Post' FORCE=true RAILS_ENV='production'
+rake db:nodes RAILS_ENV='production'
 "
 
 

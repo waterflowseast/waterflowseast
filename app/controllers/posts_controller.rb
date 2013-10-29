@@ -40,7 +40,7 @@ class PostsController < ApplicationController
 
   def create
     if @post.save
-      current_user.has_created_post(@post)
+      CreatePostWorker.perform_async current_user.id, @post.id
       redirect_to show_total_comments_post_path(@post), notice: I18n.t('controller.post.just_created')
     else
       render :new
@@ -93,7 +93,7 @@ class PostsController < ApplicationController
 
   def destroy
     post_user = @post.user
-    current_user.destroy_post(@post)
+    DestroyPostWorker.perform_async current_user.id, @post.id
     redirect_to show_posts_user_path(post_user), notice: I18n.t('controller.post.just_destroyed')
   end
 

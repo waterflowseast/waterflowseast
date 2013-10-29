@@ -162,23 +162,8 @@ class User < ActiveRecord::Base
 
   def follow!(other_user)
     following_relationships.create! followed_id: other_user.id
-
-    # you follow people, your points will be subtracted and system will send you a message
-    increase_reload! :points_count, POINTS_CONFIG['follow']
-    receive_message POINTS_CONFIG['follow'], points_count, I18n.t('controller.following_relationship.message.points_subtraction', nickname: other_user.nickname)
-
-    # the one you just followed, his points will be added and system will send him a message
-    other_user.increase_reload! :points_count, POINTS_CONFIG['be_followed']
-    other_user.receive_message POINTS_CONFIG['be_followed'], other_user.points_count, I18n.t('controller.following_relationship.message.points_addition', nickname: nickname)
-
-    # those people who followed you will receive a message from the system
-    followeds.each do |u|
-      u.receive_message 0, u.points_count, I18n.t('controller.following_relationship.message.to_followeds', name_a: nickname, name_b: other_user.nickname)
-    end
-
-    # update corresponding count
     increase! :followings_count
-    other_user.increase! :followeds_count
+    FollowWorker.perform_async id, other_user.id
   end
 
   def unfollow!(other_user)
@@ -193,45 +178,8 @@ class User < ActiveRecord::Base
 
   def collect!(post)
     collecting_relationships.create! post_id: post.id
-    post_user = post.user
-
-    # you collect others' posts, your points will be subtracted and system will send you a message
-    increase_reload! :points_count, POINTS_CONFIG['collect']
-    receive_message POINTS_CONFIG['collect'], points_count, I18n.t('controller.collecting_relationship.message.points_subtraction', nickname: post_user.nickname)
-
-    # the one whose post you just collected, his points will be added and system will send him a message
-    post_user.increase_reload! :points_count, POINTS_CONFIG['be_collected']
-    post_user.receive_message POINTS_CONFIG['be_collected'], post_user.points_count, I18n.t('controller.collecting_relationship.message.points_addition', nickname: nickname)
-
-    # those people who followed you will receive a message from the system
-    followeds.each do |u|
-      u.receive_message 0, u.points_count, I18n.t('controller.collecting_relationship.message.to_followeds', name_a: nickname, name_b: post_user.nickname)
-    end
-
-    # update corresponding count
     increase! :collections_count
-    post.increase_reload! :collectors_count
-    post.tire.update_index
-
-    # if this post's collectors amount reaches the limit, system will consider it great post and make it not deletable
-    if (post.collectors_count == POINTS_CONFIG['valuable_limit_for_collecting']) and post.can_be_deleted?
-      post.toggle! :can_be_deleted
-      post_user.increase! :great_posts_count
-    end
-
-    # if this post's collectors amount hits the bonus limit at its first time, the author of the post and the inviter of the author will get the bonus points and a message from the system
-    bonus_points = post.points_bonus_for_collecting
-    if bonus_points > post.highest_bonus_points
-      post.update_attribute :highest_bonus_points, bonus_points
-      post_user.increase_reload! :points_count, bonus_points
-      post_user.receive_message bonus_points, post_user.points_count, I18n.t('controller.collecting_relationship.message.bonus', count: post.collectors_count, bonus: bonus_points)
-
-      user_inviter = post_user.inviter
-      if user_inviter
-        user_inviter.increase_reload! :points_count, bonus_points
-        user_inviter.receive_message bonus_points, user_inviter.points_count, I18n.t('controller.collecting_relationship.message.inviter_bonus', name: post_user.nickname, count: post.collectors_count, bonus: bonus_points)
-      end
-    end
+    CollectWorker.perform_async id, post.id
   end
 
   def uncollect!(post)
@@ -249,65 +197,14 @@ class User < ActiveRecord::Base
 
   def vote_up!(votable)
     voting_up_relationships.create! votable: votable
-    votable_user = votable.user
-
-    # you vote up others' posts or comments, your points will be subtracted and system will send you a message
-    increase_reload! :points_count, POINTS_CONFIG['vote_up']
-    receive_message POINTS_CONFIG['vote_up'], points_count, I18n.t('controller.voting_up_relationship.message.points_subtraction', nickname: votable_user.nickname)
-
-    # the one whose post or comment you just voted up, his points will be added and system will send him a message
-    votable_user.increase_reload! :points_count, POINTS_CONFIG['be_voted_up']
-    votable_user.receive_message POINTS_CONFIG['be_voted_up'], votable_user.points_count, I18n.t('controller.voting_up_relationship.message.points_addition', nickname: nickname)
-
-    # those people who followed you will receive a message from the system
-    followeds.each do |u|
-      u.receive_message 0, u.points_count, I18n.t('controller.voting_up_relationship.message.to_followeds', name_a: nickname, name_b: votable_user.nickname)
-    end
-
-    # update corresponding count
     increase! :up_votes_count
-    votable.increase_reload! :up_voters_count
-    votable.tire.update_index if votable.instance_of? Post
-
-    # if the votable is a post, and its up-voters ammount reaches the limit, system will consider it great post and make it not deletable
-    if (votable.instance_of? Post) and (votable.up_voters_count == POINTS_CONFIG['valuable_limit_for_voting_up']) and votable.can_be_deleted?
-      votable.toggle! :can_be_deleted
-      votable_user.increase! :great_posts_count
-    end
-
-    # if this votable's up-voters ammount hits the bonus limit, the author of the votable and the inviter of the author will get the bonus points and a message from the system
-    bonus_points = votable.points_bonus_for_voting_up
-    if bonus_points > 0
-      votable_user.increase_reload! :points_count, bonus_points
-      votable_user.receive_message bonus_points, votable_user.points_count, I18n.t('controller.voting_up_relationship.message.bonus', count: votable.up_voters_count, bonus: bonus_points)
-
-      user_inviter = votable_user.inviter
-      if user_inviter
-        user_inviter.increase_reload! :points_count, bonus_points
-        user_inviter.receive_message bonus_points, user_inviter.points_count, I18n.t('controller.voting_up_relationship.message.inviter_bonus', name: votable_user.nickname, count: votable.up_voters_count, bonus: bonus_points)
-      end
-    end
+    VoteUpWorker.perform_async id, votable.class.name, votable.id
   end
 
   def vote_down!(votable)
     voting_down_relationships.create! votable: votable
-    votable_user = votable.user
-
-    # you vote down others' posts or comments, your points will be subtracted and system will send you a message
-    increase_reload! :points_count, POINTS_CONFIG['vote_down']
-    receive_message POINTS_CONFIG['vote_down'], points_count, I18n.t('controller.voting_down_relationship.message.points_subtraction', nickname: votable_user.nickname)
-
-    # the one whose post or comment you just voted down, system will send him a message
-    votable_user.receive_message 0, votable_user.points_count, I18n.t('controller.voting_down_relationship.message.warning', nickname: nickname)
-
-    # those people who followed you will receive a message from the system
-    followeds.each do |u|
-      u.receive_message 0, u.points_count, I18n.t('controller.voting_down_relationship.message.to_followeds', name_a: nickname, name_b: votable_user.nickname)
-    end
-
-    # update corresponding count
     increase! :down_votes_count
-    votable.increase! :down_voters_count
+    VoteDownWorker.perform_async id, votable.class.name, votable.id
   end
 
   def has_secret?(secret)
@@ -382,7 +279,7 @@ class User < ActiveRecord::Base
   end
 
   def send_invitation(sent_invitation)
-    Notifier.send_invitation(sent_invitation).deliver
+    SendInvitationWorker.perform_async sent_invitation.id
 
     # you invite people, your points will be subtracted and system will send you a message
     increase_reload! :points_count, POINTS_CONFIG['invite']
@@ -395,15 +292,13 @@ class User < ActiveRecord::Base
     changed_points = post.points_changed
     node = post.node
 
-    # you create a post, if the post will cost points or gain points, then your points will be changed and system will send you a message
-    if changed_points != 0
-      increase_reload! :points_count, changed_points
-      receive_message changed_points, points_count, I18n.t("controller.post.message.points_subtraction", node_group: node.node_group.name, node: node.name)
-    end
+    # you create a post, system will send you a message. and if the post costs points or gains points, then your points will be changed
+    increase_reload! :points_count, changed_points if changed_points != 0
+    receive_message changed_points, points_count, I18n.t("controller.post.message.points_subtraction", node_group: node.node_group.name, node: node.name, title: post.title)
 
     # those people who followed you will receive a message from the system
     followeds.each do |u|
-      u.receive_message 0, u.points_count, I18n.t('controller.post.message.to_followeds', nickname: nickname, node_group: node.node_group.name, node: node.name)
+      u.receive_message 0, u.points_count, I18n.t('controller.post.message.to_followeds', nickname: nickname, node_group: node.node_group.name, node: node.name, title: post.title)
     end
     
     # update corresponding count
@@ -478,7 +373,15 @@ class User < ActiveRecord::Base
     sent_secrets.includes(:receiver).where(receiver_deleted: false).map(&:receiver).each {|u| u.decrease! :received_secrets_count }
     received_secrets.includes(:sender).where(sender_deleted: false).map(&:sender).each {|u| u.decrease! :sent_secrets_count }
     User.where(email: invitations.pluck(:receiver_email)).where('users.invitation_id IS NOT NULL').update_all invitation_id: nil
-    comments.each {|c| destroy_comment(c) }
+
+    # default order is 'comments.created_at ASC', have to reorder to make sure the last comment you created is the first one to be deleted.
+    # The reason why I do this is becasue comments are nested, and I can even comment on my own comment.
+    #
+    # suppose I have a comment A, another user comment on A, now his comment is B, and I comment on B, now my new comment is C.
+    # so, if without reorder, my comments will be [A, C], when execute 'comments.each {|c| destroy_comment(c) }', it will first destroy_comment(A), then destroy_comment(C)
+    # when destroy_comment(A), all sub-comments (including C) will be destroyed too.
+    # so when destroy_comment(C), errors will raise because C no longer exists in the database
+    comments.reorder('comments.created_at DESC').each {|c| destroy_comment(c) }
     posts.each {|p| destroy_post(p) }
 
     destroy
@@ -486,7 +389,7 @@ class User < ActiveRecord::Base
 
   def send_email_confirm
     generate_token :confirm_token and save!
-    Notifier.send_email_confirm(self).deliver
+    SendEmailConfirmWorker.perform_async id
   end
 
   def confirmed?
@@ -512,7 +415,7 @@ class User < ActiveRecord::Base
     self.reset_deadline = EXTRA_CONFIG['reset_out_of_time_in_minutes'].minutes.from_now
     save!
 
-    Notifier.send_password_reset(self).deliver
+    SendPasswordResetWorker.perform_async id
   end
 
   def out_of_reset?

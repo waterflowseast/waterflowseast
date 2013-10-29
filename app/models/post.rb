@@ -174,19 +174,19 @@ class Post < ActiveRecord::Base
   def cleared_by(deleter)
     up_voters.each do |u|
       u.increase_reload! :points_count, POINTS_CONFIG['up_voter_compensation']
-      u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.post.message.up_voter_compensation', nickname: user.nickname)
+      u.receive_message POINTS_CONFIG['up_voter_compensation'], u.points_count, I18n.t('controller.post.message.up_voter_compensation', nickname: user.nickname, title: title)
       u.decrease! :up_votes_count
     end
 
     down_voters.each do |u|
       u.increase_reload! :points_count, POINTS_CONFIG['down_voter_compensation']
-      u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.post.message.down_voter_compensation', nickname: user.nickname)
+      u.receive_message POINTS_CONFIG['down_voter_compensation'], u.points_count, I18n.t('controller.post.message.down_voter_compensation', nickname: user.nickname, title: title)
       u.decrease! :down_votes_count
     end
 
     collectors.each do |u|
       u.increase_reload! :points_count, POINTS_CONFIG['collector_compensation']
-      u.receive_message POINTS_CONFIG['collector_compensation'], u.points_count, I18n.t('controller.post.message.collector_compensation', nickname: user.nickname)
+      u.receive_message POINTS_CONFIG['collector_compensation'], u.points_count, I18n.t('controller.post.message.collector_compensation', nickname: user.nickname, title: title)
       u.decrease! :collections_count
     end
 

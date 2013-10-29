@@ -26,7 +26,7 @@ class CommentsController < ApplicationController
 
   def create
     if @ajax_error_description.blank? and @comment.save
-      current_user.has_created_comment(@comment)
+      CreateCommentWorker.perform_async current_user.id, @comment.id
       respond_to do |format|
         format.html do
           type = @commentable.instance_of?(Comment) ? I18n.t('controller.comment.is_comment') : I18n.t('controller.comment.is_post')
@@ -55,7 +55,7 @@ class CommentsController < ApplicationController
 
   def destroy
     original_post = @comment.original_post
-    current_user.destroy_comment(@comment)
+    DestroyCommentWorker.perform_async current_user.id, @comment.id
     redirect_to show_total_comments_post_path(original_post), notice: I18n.t('controller.comment.just_destroyed')
   end
 

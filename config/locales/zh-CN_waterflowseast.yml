@@ -165,11 +165,11 @@ zh-CN:
       update_extra_info: '你成功修改了帖子的附言'
       just_destroyed: '你成功删除了帖子'
       message:
-        points_subtraction: "你在节点组【%{node_group}】之下的节点【%{node}】发表了帖子"
-        to_followeds: "%{nickname} 在节点组【%{node_group}】之下的节点【%{node}】发表了帖子"
-        up_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
-        down_voter_compensation: "%{nickname} 的帖子被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
-        collector_compensation: "%{nickname} 的帖子被删除，系统自动删除所有收藏，你对其进行过收藏，为表示歉意，系统已经对你进行积分补偿"
+        points_subtraction: "你在节点组【%{node_group}】之下的节点【%{node}】发表了帖子【%{title}】"
+        to_followeds: "%{nickname} 在节点组【%{node_group}】之下的节点【%{node}】发表了帖子【%{title}】"
+        up_voter_compensation: "%{nickname} 的帖子【%{title}】被删除，系统自动删除所有赞同，你对其表示过赞同，为表示歉意，系统已经对你进行积分补偿"
+        down_voter_compensation: "%{nickname} 的帖子【%{title}】被删除，系统自动删除所有反对，你对其表示过反对，为表示歉意，系统已经对你进行积分补偿"
+        collector_compensation: "%{nickname} 的帖子【%{title}】被删除，系统自动删除所有收藏，你对其进行过收藏，为表示歉意，系统已经对你进行积分补偿"
         delete_by_self: "你删除了帖子：【%{title}】"
         delete_by_admin: "管理员 %{admin} 删除了你的帖子：【%{title}】"
 
@@ -216,11 +216,11 @@ zh-CN:
       record_not_exist: '无法取消收藏，该项记录不存在'
       just_uncollected: "你对 %{nickname} 的帖子取消了收藏"
       message:
-        points_subtraction: "你收藏了 %{nickname} 的帖子"
-        points_addition: "%{nickname} 收藏了你的帖子"
-        to_followeds: "%{name_a} 收藏了 %{name_b} 的帖子"
-        bonus: "你的帖子被收藏%{count}次，系统奖励%{bonus}积分"
-        inviter_bonus: "你引荐的用户 %{name} 的帖子被收藏%{count}次，作为Ta的引荐人，系统将奖励你%{bonus}积分"
+        points_subtraction: "你收藏了 %{nickname} 的帖子【%{title}】"
+        points_addition: "%{nickname} 收藏了你的帖子【%{title}】"
+        to_followeds: "%{name_a} 收藏了 %{name_b} 的帖子【%{title}】"
+        bonus: "你的帖子【%{title}】被收藏%{count}次，系统奖励%{bonus}积分"
+        inviter_bonus: "你引荐的用户 %{name} 的帖子【%{title}】被收藏%{count}次，作为Ta的引荐人，系统将奖励你%{bonus}积分"
 
     voting_up_relationship:
       wrong_class: "无法对【%{klass}】的实例表示赞同"

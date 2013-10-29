@@ -1,7 +1,8 @@
-# Use this file to easily define all of your cron jobs.
-#
-# It's helpful, but not entirely necessary to understand cron before proceeding.
-# http://en.wikipedia.org/wiki/Cron
+set :output, "/home/deployer/apps/waterflowseast/shared/log/delete_users.log"
+
+every :tuesday, at: "1:20am" do
+  rake "db:delete_users"
+end
 
 # Example:
 #
