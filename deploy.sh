@@ -98,9 +98,9 @@ cat <<EOF
 EOF
 
 ssh deployer@$SERVER_IP "
-cd /home/deployer/apps/$APPLICATION_NAME/current
-RAILS_ENV=production bundle exec rake environment tire:import CLASS='Post' FORCE=true
-RAILS_ENV=production bundle exec rake db:nodes
+/bin/bash -l -c 'cd /home/deployer/apps/$APPLICATION_NAME/current
+RAILS_ENV=production bundle exec rake environment tire:import CLASS=Post FORCE=true
+RAILS_ENV=production bundle exec rake db:nodes'
 "
 
 
