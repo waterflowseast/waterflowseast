@@ -3,6 +3,6 @@
 /log/*.log
 /tmp
 /public/uploads
-/public/avatars
+/public/assets
 /config/database.yml
 /config/initializers/secret_token.rb

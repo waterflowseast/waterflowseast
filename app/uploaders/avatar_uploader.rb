@@ -15,6 +15,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   version :big do
     process resize_to_fill: [128, 128]
+    process :strip
   end
 
   version :medium, from_version: :big do
@@ -27,5 +28,13 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   def extension_white_list
     %w(jpg jpeg png)
+  end
+
+  def strip
+    manipulate! do |img|
+      img.strip
+      img = yield(img) if block_given?
+      img
+    end
   end
 end
