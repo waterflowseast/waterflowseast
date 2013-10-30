@@ -6,7 +6,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   storage :file
 
   def store_dir
-    "avatars/#{model.permalink}"
+    "assets/avatars/#{model.permalink}"
   end
 
   def filename
