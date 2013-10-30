@@ -379,3 +379,9 @@ after uploaded, ssh to deployer@YOUR-VPS, and run `source server_setup.sh`.
 ## deploy
 
 in your application root directory, just run `source deploy.sh`.
+
+
+
+# LICENSE
+
+released under the [MIT License](http://opensource.org/licenses/MIT).
