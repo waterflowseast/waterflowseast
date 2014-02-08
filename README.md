@@ -1,4 +1,4 @@
-This is the source code of [WaterFlowsEast.com](http://waterflowseast.com).
+This web app implements a forum, you can run on your local machine by taking the below actions:
 
 # RUN ON LOCAL
 
